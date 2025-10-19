@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import CodeEditor from "@/components/editor/CodeEditor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-zinc-800 text-white antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} h-screen w-screen bg-zinc-800 text-white antialiased`}
       >
         {children}
       </body>

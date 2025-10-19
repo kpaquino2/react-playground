@@ -15,7 +15,15 @@ export default function Projects() {
     addProject({
       id: Date.now().toString(),
       name: newProjectName,
-      components: [],
+      components: [
+        {
+          id: Date.now().toString(),
+          name: "App",
+          code: `export default function App() {
+  return <button>Click me</button>;
+}`,
+        },
+      ],
     });
     setNewProjectName("");
   };
