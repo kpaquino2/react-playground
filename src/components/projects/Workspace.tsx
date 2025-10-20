@@ -1,14 +1,10 @@
 "use client";
 
-import { usePlaygroundStore } from "@/store/playgroundStore";
+import { Project } from "@/store/playgroundStore";
 import Editor from "../shared/Editor";
 import { PlusIcon } from "@heroicons/react/24/solid";
 
-const Workspace = ({ id }: { id: string }) => {
-  const project = usePlaygroundStore((state) =>
-    state.projects.find((p) => p.id === id),
-  );
-  if (!project) return null;
+const Workspace = ({ project }: { project: Project }) => {
   return (
     <div className="flex">
       <div className="group flex w-64 flex-col border-r border-neutral-400 p-2">

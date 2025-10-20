@@ -1,5 +1,4 @@
-import ProjectsMenuBar from "@/components/projects/ProjectsMenuBar";
-import Workspace from "@/components/projects/Workspace";
+import { ProjectPageClient } from "@/components/projects/ProjectPageClient";
 
 export default async function Project({
   params,
@@ -8,12 +7,5 @@ export default async function Project({
 }) {
   const { id } = await params;
 
-  return (
-    <div className="flex h-full flex-col">
-      <ProjectsMenuBar id={id} />
-      <div className="flex flex-1">
-        <Workspace id={id} />
-      </div>
-    </div>
-  );
+  return <ProjectPageClient projectId={id} />;
 }

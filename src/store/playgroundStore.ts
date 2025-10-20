@@ -1,13 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type Component = {
+export type Component = {
   id: string;
   name: string;
   code: string;
 };
 
-type Project = {
+export type Project = {
   id: string;
   name: string;
   components: Component[];
