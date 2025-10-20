@@ -2,12 +2,14 @@
 
 import { type Monaco, Editor as MonacoEditor } from "@monaco-editor/react";
 import { type editor } from "monaco-editor";
+import { useEffect, useState } from "react";
 
 interface EditorProps {
   code: string;
+  update: (code: string) => void;
 }
 
-const Editor = ({ code }: EditorProps) => {
+const Editor = ({ code, update }: EditorProps) => {
   const handleEditorWillMount = (monaco: Monaco) => {
     // Determine which defaults to configure based on language
     const languageDefaults = monaco.languages.typescript.typescriptDefaults;
@@ -138,12 +140,12 @@ const Editor = ({ code }: EditorProps) => {
     monaco: Monaco,
   ) => {
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+      update(editor.getValue());
       console.log("Save triggered (custom handler)");
     });
 
     editor.focus();
   };
-
   return (
     <MonacoEditor
       height="100%"

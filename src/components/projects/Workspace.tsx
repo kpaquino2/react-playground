@@ -19,6 +19,9 @@ const Workspace = ({ project }: { project: Project }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const addComponent = usePlaygroundStore((state) => state.addComponent);
   const deleteComponent = usePlaygroundStore((state) => state.deleteComponent);
+  const updateComponent = usePlaygroundStore(
+    (state) => state.updateComponentCode,
+  );
 
   useEffect(() => {
     if (inputRef.current) {
@@ -114,7 +117,12 @@ const Workspace = ({ project }: { project: Project }) => {
         )}
       </div>
       <div className="w-128">
-        <Editor code={selectedComponent?.code ?? ""} />
+        <Editor
+          update={(code) =>
+            updateComponent(project.id, selectedComponent.id, code)
+          }
+          code={selectedComponent?.code ?? ""}
+        />
       </div>
     </div>
   );
