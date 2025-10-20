@@ -52,7 +52,7 @@ const Workspace = ({ project }: { project: Project }) => {
             onClick={() => setIsAddingComponent(true)}
             className="cursor-pointer rounded-full bg-white/0 p-1 transition hover:bg-neutral-600"
           >
-            <PlusIcon className="size-5 stroke-2" />
+            <PlusIcon className="stroke-1.5 size-5 stroke-white" />
           </button>
         </div>
         {project.components.map((c) => (
