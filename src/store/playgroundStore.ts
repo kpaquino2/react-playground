@@ -18,6 +18,7 @@ type PlaygroundState = {
   addProject: (project: Project) => void;
   deleteProject: (projectId: string) => void;
   addComponent: (projectId: string, component: Component) => void;
+  deleteComponent: (projectId: string, componentId: string) => void;
   updateComponentCode: (
     projectId: string,
     componentId: string,
@@ -40,6 +41,17 @@ export const usePlaygroundStore = create<PlaygroundState>()(
           projects: state.projects.map((p) =>
             p.id === projectId
               ? { ...p, components: [...p.components, component] }
+              : p,
+          ),
+        })),
+      deleteComponent: (projectId, componentId) =>
+        set((state) => ({
+          projects: state.projects.map((p) =>
+            p.id === projectId
+              ? {
+                  ...p,
+                  components: p.components.filter((c) => c.id !== componentId),
+                }
               : p,
           ),
         })),
