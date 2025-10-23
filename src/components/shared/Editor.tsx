@@ -1,15 +1,22 @@
 "use client";
 
+import { Component } from "@/store/playgroundStore";
 import { type Monaco, Editor as MonacoEditor } from "@monaco-editor/react";
 import { type editor } from "monaco-editor";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface EditorProps {
-  code: string;
-  update: (code: string) => void;
+  component: Component;
+  update: (id: string, code: string) => void;
 }
 
-const Editor = ({ code, update }: EditorProps) => {
+const Editor = ({ component, update }: EditorProps) => {
+  const componentRef = useRef(component);
+
+  useEffect(() => {
+    componentRef.current = component;
+  }, [component]);
+
   const handleEditorWillMount = (monaco: Monaco) => {
     // Determine which defaults to configure based on language
     const languageDefaults = monaco.languages.typescript.typescriptDefaults;
@@ -140,17 +147,20 @@ const Editor = ({ code, update }: EditorProps) => {
     monaco: Monaco,
   ) => {
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
-      update(editor.getValue());
-      console.log("Save triggered (custom handler)");
+      if (componentRef.current)
+        update(componentRef.current.id, editor.getValue());
+      // console.log("Save triggered (custom handler)");
     });
 
     editor.focus();
   };
+
   return (
     <MonacoEditor
+      key={component.id}
       height="100%"
       defaultLanguage="typescript"
-      value={code}
+      value={component.code}
       theme="vs-dark"
       beforeMount={handleEditorWillMount}
       onMount={handleEditorDidMount}

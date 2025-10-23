@@ -8,7 +8,7 @@ import {
   TrashIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
-import { useEffect, useRef, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 
 const Workspace = ({ project }: { project: Project }) => {
   const [selectedComponent, setSelectedComponent] = useState(
@@ -35,10 +35,15 @@ const Workspace = ({ project }: { project: Project }) => {
   };
 
   const handleAdd = () => {
+    const compName = newComponentName.trim();
     const newComponent = {
-      id: newComponentName.trim(),
-      name: newComponentName.trim(),
-      code: "",
+      id: compName.toLocaleLowerCase(),
+      name: compName,
+      code: `
+export default function ${compName}() {
+  return <div>This is a new component</div>;
+}
+      `.trim(),
     };
     addComponent(project.id, newComponent);
 
@@ -46,6 +51,7 @@ const Workspace = ({ project }: { project: Project }) => {
     setNewComponentName("");
     setSelectedComponent(newComponent);
   };
+
   return (
     <div className="flex">
       <div className="group flex w-64 flex-col gap-1 border-r border-neutral-400 p-2">
@@ -59,7 +65,7 @@ const Workspace = ({ project }: { project: Project }) => {
           </button>
         </div>
         {project.components.map((c) => (
-          <button
+          <div
             key={c.id}
             onClick={() => setSelectedComponent(c)}
             className={
@@ -76,13 +82,15 @@ const Workspace = ({ project }: { project: Project }) => {
                   e.preventDefault();
                   e.stopPropagation();
                   deleteComponent(project.id, c.id);
+                  if (selectedComponent.id === c.id)
+                    setSelectedComponent(project.components[0]);
                 }}
                 className="cursor-pointer rounded-full bg-red-500 p-1.5 opacity-50 transition hover:opacity-100"
               >
                 <TrashIcon className="size-3.5" />
               </button>
             )}
-          </button>
+          </div>
         ))}
         {isAddingComponent ? (
           <div className="flex w-full items-center gap-0.5 rounded bg-neutral-600">
@@ -118,10 +126,8 @@ const Workspace = ({ project }: { project: Project }) => {
       </div>
       <div className="w-128">
         <Editor
-          update={(code) =>
-            updateComponent(project.id, selectedComponent.id, code)
-          }
-          code={selectedComponent?.code ?? ""}
+          update={(id, code) => updateComponent(project.id, id, code)}
+          component={selectedComponent}
         />
       </div>
     </div>
