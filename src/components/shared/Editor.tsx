@@ -8,9 +8,10 @@ import { useEffect, useRef, useState } from "react";
 interface EditorProps {
   component: Component;
   update: (id: string, code: string) => void;
+  setHasUnsavedChanges: (b: boolean) => void;
 }
 
-const Editor = ({ component, update }: EditorProps) => {
+const Editor = ({ component, update, setHasUnsavedChanges }: EditorProps) => {
   const componentRef = useRef(component);
 
   useEffect(() => {
@@ -147,12 +148,18 @@ const Editor = ({ component, update }: EditorProps) => {
     monaco: Monaco,
   ) => {
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
-      if (componentRef.current)
-        update(componentRef.current.id, editor.getValue());
+      if (!componentRef.current) return;
+      update(componentRef.current.id, editor.getValue());
+      setHasUnsavedChanges(false);
       // console.log("Save triggered (custom handler)");
     });
 
     editor.focus();
+  };
+
+  const handleChange = (v: string | undefined) => {
+    if (componentRef.current)
+      setHasUnsavedChanges(v !== componentRef.current.code);
   };
 
   return (
@@ -164,6 +171,7 @@ const Editor = ({ component, update }: EditorProps) => {
       theme="vs-dark"
       beforeMount={handleEditorWillMount}
       onMount={handleEditorDidMount}
+      onChange={handleChange}
       options={{
         minimap: { enabled: false },
         fontSize: 14,

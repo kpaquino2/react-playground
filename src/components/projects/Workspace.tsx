@@ -1,6 +1,10 @@
 "use client";
 
-import { Project, usePlaygroundStore } from "@/store/playgroundStore";
+import {
+  Component,
+  Project,
+  usePlaygroundStore,
+} from "@/store/playgroundStore";
 import Editor from "../shared/Editor";
 import {
   CheckIcon,
@@ -10,10 +14,21 @@ import {
 } from "@heroicons/react/24/solid";
 import { MouseEvent, useEffect, useRef, useState } from "react";
 
-const Workspace = ({ project }: { project: Project }) => {
-  const [selectedComponent, setSelectedComponent] = useState(
-    project.components[0],
-  );
+interface WorkspaceProps {
+  projectId: string;
+  projectComponents: Component[];
+  selectedComponent: Component;
+  setSelectedComponent: (c: Component) => void;
+  setHasUnsavedChanges: (b: boolean) => void;
+}
+
+const Workspace = ({
+  projectId,
+  projectComponents,
+  selectedComponent,
+  setSelectedComponent,
+  setHasUnsavedChanges,
+}: WorkspaceProps) => {
   const [isAddingComponent, setIsAddingComponent] = useState(false);
   const [newComponentName, setNewComponentName] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -45,7 +60,7 @@ export default function ${compName}() {
 }
       `.trim(),
     };
-    addComponent(project.id, newComponent);
+    addComponent(projectId, newComponent);
 
     setIsAddingComponent(false);
     setNewComponentName("");
@@ -64,7 +79,7 @@ export default function ${compName}() {
             <PlusIcon className="stroke-1.5 size-5 stroke-white" />
           </button>
         </div>
-        {project.components.map((c) => (
+        {projectComponents.map((c) => (
           <div
             key={c.id}
             onClick={() => setSelectedComponent(c)}
@@ -81,9 +96,9 @@ export default function ${compName}() {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  deleteComponent(project.id, c.id);
+                  deleteComponent(projectId, c.id);
                   if (selectedComponent.id === c.id)
-                    setSelectedComponent(project.components[0]);
+                    setSelectedComponent(projectComponents[0]);
                 }}
                 className="cursor-pointer rounded-full bg-red-500 p-1.5 opacity-50 transition hover:opacity-100"
               >
@@ -126,8 +141,9 @@ export default function ${compName}() {
       </div>
       <div className="w-128">
         <Editor
-          update={(id, code) => updateComponent(project.id, id, code)}
+          update={(id, code) => updateComponent(projectId, id, code)}
           component={selectedComponent}
+          setHasUnsavedChanges={setHasUnsavedChanges}
         />
       </div>
     </div>
