@@ -2,7 +2,6 @@
 
 import { useMonaco } from "@monaco-editor/react";
 import MenuBar from "../shared/MenuBar";
-import { useEffect } from "react";
 import { usePlaygroundStore } from "@/store/playgroundStore";
 
 interface ProjectsMenuBarProps {

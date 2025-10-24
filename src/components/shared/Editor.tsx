@@ -3,7 +3,7 @@
 import { Component } from "@/store/playgroundStore";
 import { type Monaco, Editor as MonacoEditor } from "@monaco-editor/react";
 import { type editor } from "monaco-editor";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 interface EditorProps {
   component: Component;

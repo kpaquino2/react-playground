@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  Component,
-  Project,
-  usePlaygroundStore,
-} from "@/store/playgroundStore";
+import { Component, usePlaygroundStore } from "@/store/playgroundStore";
 import Editor from "../shared/Editor";
 import {
   CheckIcon,
@@ -12,7 +8,7 @@ import {
   TrashIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface WorkspaceProps {
   projectId: string;

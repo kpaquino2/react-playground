@@ -93,9 +93,9 @@ export function useESBuild() {
         const bundledCode = result.outputFiles[0].text;
         console.log("✅ Bundle successful");
         return bundledCode;
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("❌ Bundle error:", err);
-        throw new Error(err.message || "Failed to bundle components");
+        throw new Error("Failed to bundle components");
       }
     },
     [ready],
