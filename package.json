@@ -11,6 +11,7 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@monaco-editor/react": "4.8.0-rc.2",
+    "@remixicon/react": "^4.7.0",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.76.1",
     "esbuild-wasm": "^0.25.11",
