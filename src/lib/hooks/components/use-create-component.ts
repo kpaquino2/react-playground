@@ -1,5 +1,5 @@
 import { Component } from "@/lib/types";
-import { useSWRMutation } from "../config/useSWRMutation";
+import { useSWRMutation } from "../config/use-swr-mutation";
 import { AppError, handleSupabaseError } from "@/lib/errors/handler";
 import { SWRMutationConfiguration } from "swr/mutation";
 import { createClient } from "@/lib/supabase/client";

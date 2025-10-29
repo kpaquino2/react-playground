@@ -1,6 +1,6 @@
 "use client";
 
-import { useUserComponents } from "@/lib/hooks/components/useUserComponents";
+import { useUserComponents } from "@/lib/hooks/components/use-user-components";
 import {
   Empty,
   EmptyContent,
@@ -10,11 +10,11 @@ import {
   EmptyTitle,
 } from "../ui/empty";
 import { Button } from "../ui/button";
-import { RiAddLargeFill, RiAddLine, RiCodeSSlashLine } from "@remixicon/react";
+import { RiAddLargeFill, RiCodeSSlashLine } from "@remixicon/react";
 import { ComponentDialog } from "./component-dialog";
 import { useState } from "react";
 
-const ComponentsList = () => {
+export function ComponentsList() {
   const { data, error, isLoading } = useUserComponents();
   const [openComponentDialog, setOpenComponentDialog] = useState(false);
   return (
@@ -60,6 +60,4 @@ const ComponentsList = () => {
       </div>
     </>
   );
-};
-
-export default ComponentsList;
+}

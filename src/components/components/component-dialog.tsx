@@ -1,4 +1,3 @@
-import { Component } from "@/lib/types";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -21,7 +20,7 @@ import {
   InputGroupText,
   InputGroupTextarea,
 } from "../ui/input-group";
-import { useCreateComponent } from "@/lib/hooks/components/useCreateComponent";
+import { useCreateComponent } from "@/lib/hooks/components/use-create-component";
 import {
   Select,
   SelectContent,
@@ -29,10 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { RiLoader5Fill } from "@remixicon/react";
-import { Loader2Icon, LoaderIcon } from "lucide-react";
 import { Spinner } from "../ui/spinner";
-import { AppError } from "@/lib/errors/handler";
 
 interface ComponentDialogProps {
   open: boolean;

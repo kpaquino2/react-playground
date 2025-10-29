@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/lib/context/AuthContext";
+import { useAuth } from "@/lib/context/auth-context";
 import { RiGithubFill } from "@remixicon/react";
 import { Provider } from "@supabase/supabase-js";
 import { Button } from "../ui/button";
