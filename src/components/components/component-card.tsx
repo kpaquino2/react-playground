@@ -22,7 +22,7 @@ export function ComponentCard({
   setEditComponent,
 }: ComponentCardProps) {
   return (
-    <Link href="/">
+    <Link href={`components/${component.id}`}>
       <Card className="w-[300px] transition hover:brightness-125">
         <CardHeader>
           <CardTitle>{component.name}</CardTitle>
