@@ -17,6 +17,7 @@ import { useState } from "react";
 import { Spinner } from "../ui/spinner";
 import { ComponentCard } from "./component-card";
 import { type Component } from "@/lib/types";
+import { FrownIcon } from "lucide-react";
 
 export function ComponentsList() {
   const { data, error, isLoading } = useUserComponents();
@@ -64,22 +65,29 @@ export function ComponentsList() {
           <Empty>
             <EmptyHeader>
               <EmptyMedia variant="icon">
-                <RiCodeSSlashLine />
+                {error ? <FrownIcon /> : <RiCodeSSlashLine />}
               </EmptyMedia>
-              <EmptyTitle>No Components Yet</EmptyTitle>
+              <EmptyTitle>
+                {error ? error.userMessage : "No Components Yet"}
+              </EmptyTitle>
               <EmptyDescription>
-                You haven&apos;t created any components yet. Get started by
-                creating your first component.
+                {error
+                  ? error.code
+                    ? `Error code: ${error.code}`
+                    : "Unkown error"
+                  : "You haven&apos;t created any components yet. Get started by creating your first component."}
               </EmptyDescription>
             </EmptyHeader>
-            <EmptyContent>
-              <div className="flex gap-2">
-                <Button onClick={() => setOpenCreateComponentDialog(true)}>
-                  <RiAddLargeFill />
-                  Create Component
-                </Button>
-              </div>
-            </EmptyContent>
+            {!error && (
+              <EmptyContent>
+                <div className="flex gap-2">
+                  <Button onClick={() => setOpenCreateComponentDialog(true)}>
+                    <RiAddLargeFill />
+                    Create Component
+                  </Button>
+                </div>
+              </EmptyContent>
+            )}
           </Empty>
         )}
       </div>

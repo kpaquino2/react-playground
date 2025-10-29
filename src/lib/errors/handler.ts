@@ -30,7 +30,8 @@ const SUPABASE_ERROR_MESSAGES: Record<string, string> = {
   "PGRST204": "Component not found",
 };
 
-const DEFAULT_ERROR_MESSAGE = "Something went wrong. Please try again.";
+const DEFAULT_ERROR_MESSAGE =
+  "Oops, something went wrong. Please try again later.";
 
 export function handleSupabaseError(
   error: AppError | PostgrestError,

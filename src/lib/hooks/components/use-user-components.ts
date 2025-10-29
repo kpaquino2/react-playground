@@ -1,6 +1,7 @@
 import type { Component } from "@/lib/types";
 import { useSWR } from "../config/use-swr";
 import { type createClient } from "@/lib/supabase/client";
+import { handleSupabaseError } from "@/lib/errors/handler";
 
 const fetcher = async (
   supabase: ReturnType<typeof createClient>,
@@ -16,7 +17,7 @@ const fetcher = async (
     .order("updated_at", { ascending: false })
     .limit(args_0);
 
-  if (error) throw error;
+  if (error) throw handleSupabaseError(error);
   return data || [];
 };
 
