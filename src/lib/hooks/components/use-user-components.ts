@@ -20,7 +20,7 @@ const fetcher = async (
   return data || [];
 };
 
-export function useUserComponents(limit: number = 10) {
+export function useUserComponents(limit: number = 24) {
   return useSWR<Component[], [number]>(
     ["my-components", limit],
     fetcher,

@@ -34,7 +34,7 @@ export function ComponentsList() {
           </Button>
         )}
       </div>
-      <div className="flex flex-wrap gap-4">
+      <div className="mb-4 flex flex-wrap gap-4">
         {isLoading ? (
           <div className="grid h-96 w-full place-items-center">
             <div className="flex flex-col items-center">
