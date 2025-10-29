@@ -11,24 +11,34 @@ import {
 } from "../ui/empty";
 import { Button } from "../ui/button";
 import { RiAddLargeFill, RiCodeSSlashLine } from "@remixicon/react";
-import { ComponentDialog } from "./component-dialog";
+import { CreateComponentDialog } from "./create-component-dialog";
+import { UpdateComponentDialog } from "./update-component-dialog";
 import { useState } from "react";
 import { Spinner } from "../ui/spinner";
 import { ComponentCard } from "./component-card";
+import { Component } from "@/lib/types";
 
 export function ComponentsList() {
   const { data, error, isLoading } = useUserComponents();
-  const [openComponentDialog, setOpenComponentDialog] = useState(false);
+  const [openCreateComponentDailog, setOpenCreateComponentDialog] =
+    useState(false);
+  const [openUpdateComponentDailog, setOpenUpdateComponentDialog] =
+    useState<Component>();
+
   return (
     <>
-      <ComponentDialog
-        open={openComponentDialog}
-        setOpen={setOpenComponentDialog}
+      <CreateComponentDialog
+        open={openCreateComponentDailog}
+        setOpen={setOpenCreateComponentDialog}
+      />
+      <UpdateComponentDialog
+        component={openUpdateComponentDailog}
+        setComponent={setOpenUpdateComponentDialog}
       />
       <div className="my-4 flex items-center justify-between">
         <p className="text-xl">Components</p>
         {data && data.length > 0 && (
-          <Button size="sm" onClick={() => setOpenComponentDialog(true)}>
+          <Button size="sm" onClick={() => setOpenCreateComponentDialog(true)}>
             <RiAddLargeFill />
             Create Component
           </Button>
@@ -43,7 +53,13 @@ export function ComponentsList() {
             </div>
           </div>
         ) : data && data.length > 0 ? (
-          data.map((c) => <ComponentCard key={c.id} component={c} />)
+          data.map((c) => (
+            <ComponentCard
+              key={c.id}
+              component={c}
+              setEditComponent={setOpenUpdateComponentDialog}
+            />
+          ))
         ) : (
           <Empty>
             <EmptyHeader>
@@ -58,7 +74,7 @@ export function ComponentsList() {
             </EmptyHeader>
             <EmptyContent>
               <div className="flex gap-2">
-                <Button onClick={() => setOpenComponentDialog(true)}>
+                <Button onClick={() => setOpenCreateComponentDialog(true)}>
                   <RiAddLargeFill />
                   Create Component
                 </Button>

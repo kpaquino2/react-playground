@@ -24,11 +24,6 @@ import {
 } from "../ui/select";
 import { Spinner } from "../ui/spinner";
 
-interface ComponentDialogProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}
-
 const formSchema = z.object({
   name: z
     .string()
@@ -49,7 +44,12 @@ const formSchema = z.object({
   visibility: z.enum(["public", "private"]),
 });
 
-export function ComponentDialog({ open, setOpen }: ComponentDialogProps) {
+interface ComponentDialogProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+export function CreateComponentDialog({ open, setOpen }: ComponentDialogProps) {
   const { isMutating, trigger } = useCreateComponent({
     onError: (e) => toast.error(e.userMessage),
     onSuccess: () => {
