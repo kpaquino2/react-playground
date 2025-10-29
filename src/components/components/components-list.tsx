@@ -13,6 +13,7 @@ import { Button } from "../ui/button";
 import { RiAddLargeFill, RiCodeSSlashLine } from "@remixicon/react";
 import { ComponentDialog } from "./component-dialog";
 import { useState } from "react";
+import { Spinner } from "../ui/spinner";
 
 export function ComponentsList() {
   const { data, error, isLoading } = useUserComponents();
@@ -32,8 +33,15 @@ export function ComponentsList() {
           </Button>
         )}
       </div>
-      <div className="flex flex-wrap">
-        {data && data.length > 0 ? (
+      <div className="flex flex-wrap gap-4">
+        {isLoading ? (
+          <div className="grid h-96 w-full place-items-center">
+            <div className="flex flex-col items-center">
+              <Spinner className="size-9" />
+              <p className="font-semibold">Loading...</p>
+            </div>
+          </div>
+        ) : data && data.length > 0 ? (
           data.map((c) => <div key={c.id}>{c.id}</div>)
         ) : (
           <Empty>

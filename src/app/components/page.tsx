@@ -11,7 +11,7 @@ export default function ComponentsPage() {
         </div>
       </header>
       <main className="flex-1">
-        <div className="mx-auto flex max-w-7xl flex-col px-5">
+        <div className="mx-auto flex max-w-7xl flex-col px-4">
           <ComponentsList />
         </div>
       </main>
