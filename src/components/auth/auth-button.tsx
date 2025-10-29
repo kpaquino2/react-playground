@@ -1,14 +1,15 @@
 "use client";
 
 import { useAuth } from "@/lib/context/AuthContext";
-import { RiGithubFill, RiGoogleFill } from "@remixicon/react";
+import { RiGithubFill } from "@remixicon/react";
 import { Provider } from "@supabase/supabase-js";
+import { Button } from "../ui/button";
 
 interface AuthButtonProps {
   provider: Provider;
 }
 
-const AuthButton = ({ provider }: AuthButtonProps) => {
+export function AuthButton({ provider }: AuthButtonProps) {
   const { signInWithGithub } = useAuth();
 
   const providerMap: Partial<
@@ -22,21 +23,16 @@ const AuthButton = ({ provider }: AuthButtonProps) => {
     >
   > = {
     github: {
-      icon: <RiGithubFill />,
+      icon: <RiGithubFill className="size-5" />,
       name: "GitHub",
       onClick: signInWithGithub,
     },
   };
 
   return (
-    <button
-      onClick={providerMap[provider]?.onClick}
-      className="flex cursor-pointer items-center justify-center gap-2 rounded bg-teal-600 px-5 py-2 transition-colors hover:bg-teal-700"
-    >
+    <Button onClick={providerMap[provider]?.onClick} size="lg">
       {providerMap[provider]?.icon}
-      <p className="text-lg">Sign in with {providerMap[provider]?.name}</p>
-    </button>
+      <p className="">Sign in with {providerMap[provider]?.name}</p>
+    </Button>
   );
-};
-
-export default AuthButton;
+}
