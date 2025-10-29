@@ -1,6 +1,6 @@
 import type { Component } from "@/lib/types";
 import { useSWR } from "../config/use-swr";
-import { createClient } from "@/lib/supabase/client";
+import { type createClient } from "@/lib/supabase/client";
 
 const fetcher = async (
   supabase: ReturnType<typeof createClient>,

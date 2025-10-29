@@ -1,6 +1,6 @@
-import { AppError, handleSupabaseError } from "@/lib/errors/handler";
+import type { AppError } from "@/lib/errors/handler";
 import { createClient } from "@/lib/supabase/client";
-import { SWRConfiguration, SWRResponse } from "swr";
+import { type SWRConfiguration, type SWRResponse } from "swr";
 import useSWRDefault from "swr/immutable";
 
 type SupabaseClient = ReturnType<typeof createClient>;
@@ -13,14 +13,14 @@ export function useSWR<T>(
 ): SWRResponse<T, AppError>;
 
 // Overload 2: With arguments
-export function useSWR<T, Args extends any[]>(
+export function useSWR<T, Args extends unknown[]>(
   key: [string, ...Args] | null,
   fetcher: (supabase: SupabaseClient, ...args: Args) => Promise<T>,
   config?: SWRConfiguration<T, AppError>,
 ): SWRResponse<T, AppError>;
 
 // Implementation
-export function useSWR<T, Args extends any[] = []>(
+export function useSWR<T, Args extends unknown[] = []>(
   key: [string, ...Args] | null,
   fetcher: (supabase: SupabaseClient, ...args: Args) => Promise<T>,
   config: SWRConfiguration<T, AppError> = {},
@@ -30,12 +30,8 @@ export function useSWR<T, Args extends any[] = []>(
   return useSWRDefault<T, AppError>(
     key,
     async (keyArray: [string, ...Args]) => {
-      try {
-        const [, ...args] = keyArray;
-        return await fetcher(supabase, ...(args as Args));
-      } catch (error) {
-        throw handleSupabaseError(error);
-      }
+      const [, ...args] = keyArray;
+      return await fetcher(supabase, ...(args as Args));
     },
     config,
   );

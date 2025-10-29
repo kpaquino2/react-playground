@@ -1,8 +1,8 @@
-import { Component } from "@/lib/types";
+import { type Component } from "@/lib/types";
 import { useSWRMutation } from "../config/use-swr-mutation";
 import { AppError, handleSupabaseError } from "@/lib/errors/handler";
-import { SWRMutationConfiguration } from "swr/mutation";
-import { createClient } from "@/lib/supabase/client";
+import { type SWRMutationConfiguration } from "swr/mutation";
+import { type createClient } from "@/lib/supabase/client";
 
 const fetcher = async (
   supabase: ReturnType<typeof createClient>,

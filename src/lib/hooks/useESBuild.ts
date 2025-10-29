@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import * as esbuild from "esbuild-wasm";
-import { Component } from "@/store/playgroundStore";
+import { type Component } from "@/store/playgroundStore";
 
 let isInitialized = false;
 let initPromise: Promise<void> | null = null;

@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Spinner } from "../ui/spinner";
-import { Component } from "@/lib/types";
+import { type Component } from "@/lib/types";
 import { useEffect } from "react";
 import { useUpdateComponent } from "@/lib/hooks/components/use-update-component";
 
@@ -59,7 +59,7 @@ export function UpdateComponentDialog({
     onError: (e) => toast.error(e.userMessage),
     onSuccess: () => {
       toast.success("Successfully updated a component!");
-      onOpenChange(false);
+      onOpenChange();
     },
   });
 
@@ -80,13 +80,13 @@ export function UpdateComponentDialog({
         visibility: component.visibility === "private" ? "private" : "public",
       });
     }
-  }, [component]);
+  }, [component, form]);
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     trigger({ id: component?.id, ...data });
   }
 
-  function onOpenChange(open: boolean) {
+  function onOpenChange() {
     setComponent(undefined);
     form.reset();
   }

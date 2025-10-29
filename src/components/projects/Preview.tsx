@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useESBuild } from "@/lib/hooks/useESBuild";
-import { Project } from "@/store/playgroundStore";
+import { type Project } from "@/store/playgroundStore";
 
 interface PreviewProps {
   project: Project;

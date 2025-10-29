@@ -1,6 +1,6 @@
 "use client";
 
-import { Component, usePlaygroundStore } from "@/store/playgroundStore";
+import { type Component, usePlaygroundStore } from "@/store/playgroundStore";
 import Editor from "../shared/Editor";
 import {
   CheckIcon,

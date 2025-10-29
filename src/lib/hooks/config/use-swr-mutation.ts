@@ -1,13 +1,13 @@
-import { AppError } from "@/lib/errors/handler";
+import { type AppError } from "@/lib/errors/handler";
 import { createClient } from "@/lib/supabase/client";
 import { useSWRConfig } from "swr";
 import useSWRMutationDefault, {
   type SWRMutationConfiguration,
-  SWRMutationResponse,
+  type SWRMutationResponse,
 } from "swr/mutation";
 
 // Generic mutation wrapper for Supabase
-export function useSWRMutation<T, Args = any>(
+export function useSWRMutation<T, Args = unknown>(
   key: string,
   mutator: (
     supabase: ReturnType<typeof createClient>,

@@ -1,5 +1,5 @@
 // lib/types.ts
-import { Database } from "./database.types";
+import { type Database } from "./database.types";
 
 export type Component = Database["public"]["Tables"]["components"]["Row"];
 export type ComponentInsert =

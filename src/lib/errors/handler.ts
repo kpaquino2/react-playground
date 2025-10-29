@@ -1,3 +1,5 @@
+import type { PostgrestError } from "@supabase/supabase-js";
+
 export class AppError extends Error {
   constructor(
     message: string,
@@ -30,7 +32,9 @@ const SUPABASE_ERROR_MESSAGES: Record<string, string> = {
 
 const DEFAULT_ERROR_MESSAGE = "Something went wrong. Please try again.";
 
-export function handleSupabaseError(error: any): AppError {
+export function handleSupabaseError(
+  error: AppError | PostgrestError,
+): AppError {
   // Already an AppError (our custom error)
   if (error instanceof AppError) {
     return error;

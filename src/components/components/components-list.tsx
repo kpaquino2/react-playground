@@ -16,7 +16,7 @@ import { UpdateComponentDialog } from "./update-component-dialog";
 import { useState } from "react";
 import { Spinner } from "../ui/spinner";
 import { ComponentCard } from "./component-card";
-import { Component } from "@/lib/types";
+import { type Component } from "@/lib/types";
 
 export function ComponentsList() {
   const { data, error, isLoading } = useUserComponents();

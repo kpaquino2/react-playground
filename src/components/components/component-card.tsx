@@ -1,4 +1,4 @@
-import { Component } from "@/lib/types";
+import { type Component } from "@/lib/types";
 import {
   Card,
   CardAction,
