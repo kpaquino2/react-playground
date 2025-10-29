@@ -31,11 +31,16 @@ export function ComponentCardMenu({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="left" align="start">
-        <DropdownMenuItem disabled={isMutating} onSelect={editComponent}>
+        <DropdownMenuItem
+          disabled={isMutating}
+          onClick={(e) => e.stopPropagation()}
+          onSelect={editComponent}
+        >
           Edit
         </DropdownMenuItem>
         <DropdownMenuItem
           disabled={isMutating}
+          onClick={(e) => e.stopPropagation()}
           onSelect={() => trigger(componentId)}
         >
           Delete

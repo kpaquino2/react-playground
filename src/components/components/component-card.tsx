@@ -10,6 +10,7 @@ import {
 import { LockKeyholeIcon } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ComponentCardMenu } from "./component-card-menu";
+import Link from "next/link";
 
 interface ComponentCardProps {
   component: Component;
@@ -21,27 +22,31 @@ export function ComponentCard({
   setEditComponent,
 }: ComponentCardProps) {
   return (
-    <Card className="w-[300px]">
-      <CardHeader>
-        <CardTitle>{component.name}</CardTitle>
-        <CardDescription>{component.slug}</CardDescription>
-        <CardAction>
-          <ComponentCardMenu
-            componentId={component.id}
-            editComponent={() => {
-              setEditComponent(component);
-            }}
-          />
-        </CardAction>
-      </CardHeader>
-      <CardFooter className="text-muted-foreground justify-between">
-        <p className="text-xs">
-          {formatDistanceToNow(component.updated_at || "", { addSuffix: true })}
-        </p>
-        {component.visibility === "private" && (
-          <LockKeyholeIcon className="stroke-1.5 size-4" />
-        )}
-      </CardFooter>
-    </Card>
+    <Link href="/">
+      <Card className="w-[300px] transition hover:brightness-125">
+        <CardHeader>
+          <CardTitle>{component.name}</CardTitle>
+          <CardDescription>{component.slug}</CardDescription>
+          <CardAction>
+            <ComponentCardMenu
+              componentId={component.id}
+              editComponent={() => {
+                setEditComponent(component);
+              }}
+            />
+          </CardAction>
+        </CardHeader>
+        <CardFooter className="text-muted-foreground justify-between">
+          <p className="text-xs">
+            {formatDistanceToNow(component.updated_at || "", {
+              addSuffix: true,
+            })}
+          </p>
+          {component.visibility === "private" && (
+            <LockKeyholeIcon className="stroke-1.5 size-4" />
+          )}
+        </CardFooter>
+      </Card>
+    </Link>
   );
 }
