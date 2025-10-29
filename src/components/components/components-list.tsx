@@ -10,14 +10,13 @@ import {
   EmptyTitle,
 } from "../ui/empty";
 import { Button } from "../ui/button";
-import { RiAddLargeFill, RiCodeSSlashLine } from "@remixicon/react";
 import { CreateComponentDialog } from "./create-component-dialog";
 import { UpdateComponentDialog } from "./update-component-dialog";
 import { useState } from "react";
 import { Spinner } from "../ui/spinner";
 import { ComponentCard } from "./component-card";
 import { type Component } from "@/lib/types";
-import { FrownIcon } from "lucide-react";
+import { CodeXmlIcon, FrownIcon, PlusIcon } from "lucide-react";
 
 export function ComponentsList() {
   const { data, error, isLoading } = useUserComponents();
@@ -40,7 +39,7 @@ export function ComponentsList() {
         <p className="text-xl">Components</p>
         {data && data.length > 0 && (
           <Button size="sm" onClick={() => setOpenCreateComponentDialog(true)}>
-            <RiAddLargeFill />
+            <PlusIcon />
             Create Component
           </Button>
         )}
@@ -65,7 +64,7 @@ export function ComponentsList() {
           <Empty>
             <EmptyHeader>
               <EmptyMedia variant="icon">
-                {error ? <FrownIcon /> : <RiCodeSSlashLine />}
+                {error ? <FrownIcon /> : <CodeXmlIcon />}
               </EmptyMedia>
               <EmptyTitle>
                 {error ? error.userMessage : "No Components Yet"}
@@ -82,7 +81,7 @@ export function ComponentsList() {
               <EmptyContent>
                 <div className="flex gap-2">
                   <Button onClick={() => setOpenCreateComponentDialog(true)}>
-                    <RiAddLargeFill />
+                    <PlusIcon />
                     Create Component
                   </Button>
                 </div>
