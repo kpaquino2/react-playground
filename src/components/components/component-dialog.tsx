@@ -14,12 +14,6 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea,
-} from "../ui/input-group";
 import { useCreateComponent } from "@/lib/hooks/components/use-create-component";
 import {
   Select,
@@ -53,9 +47,6 @@ const formSchema = z.object({
       "Slug cannot start or end with a hyphen, or have consecutive hyphens",
     ),
   visibility: z.enum(["public", "private"]),
-  description: z
-    .string()
-    .max(256, "Description must be at most 256 characters."),
 });
 
 export function ComponentDialog({ open, setOpen }: ComponentDialogProps) {
@@ -73,7 +64,6 @@ export function ComponentDialog({ open, setOpen }: ComponentDialogProps) {
       name: "",
       slug: "",
       visibility: "public",
-      description: "",
     },
   });
 
@@ -96,7 +86,7 @@ export function ComponentDialog({ open, setOpen }: ComponentDialogProps) {
               Configure component properties.
             </DialogDescription>
           </DialogHeader>
-          <FieldGroup>
+          <FieldGroup className="gap-4">
             <Controller
               name="name"
               control={form.control}
@@ -150,34 +140,6 @@ export function ComponentDialog({ open, setOpen }: ComponentDialogProps) {
                       <SelectItem value="private">Private</SelectItem>
                     </SelectContent>
                   </Select>
-                </Field>
-              )}
-            />
-            <Controller
-              name="description"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="description-field">
-                    Description
-                  </FieldLabel>
-                  <InputGroup>
-                    <InputGroupTextarea
-                      {...field}
-                      id="description-field"
-                      rows={6}
-                      className="min-h-24 resize-none"
-                      aria-invalid={fieldState.invalid}
-                    />
-                    <InputGroupAddon align="block-end">
-                      <InputGroupText className="tabular-nums">
-                        {field.value.length}/256 characters
-                      </InputGroupText>
-                    </InputGroupAddon>
-                  </InputGroup>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
                 </Field>
               )}
             />
