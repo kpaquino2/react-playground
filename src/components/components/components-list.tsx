@@ -14,6 +14,7 @@ import { RiAddLargeFill, RiCodeSSlashLine } from "@remixicon/react";
 import { ComponentDialog } from "./component-dialog";
 import { useState } from "react";
 import { Spinner } from "../ui/spinner";
+import { ComponentCard } from "./component-card";
 
 export function ComponentsList() {
   const { data, error, isLoading } = useUserComponents();
@@ -42,7 +43,7 @@ export function ComponentsList() {
             </div>
           </div>
         ) : data && data.length > 0 ? (
-          data.map((c) => <div key={c.id}>{c.id}</div>)
+          data.map((c) => <ComponentCard key={c.id} component={c} />)
         ) : (
           <Empty>
             <EmptyHeader>
