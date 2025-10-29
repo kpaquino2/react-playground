@@ -6,12 +6,23 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { useDeleteComponent } from "@/lib/hooks/components/use-delete-component";
+import { toast } from "sonner";
 
 interface ComponentCardMenuProps {
+  componentId: string;
   editComponent: () => void;
 }
 
-export function ComponentCardMenu({ editComponent }: ComponentCardMenuProps) {
+export function ComponentCardMenu({
+  componentId,
+  editComponent,
+}: ComponentCardMenuProps) {
+  const { isMutating, trigger } = useDeleteComponent({
+    onError: (e) => toast.error(e.userMessage),
+    onSuccess: () => toast.success("Successfully deleted a component!"),
+  });
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -20,8 +31,15 @@ export function ComponentCardMenu({ editComponent }: ComponentCardMenuProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="left" align="start">
-        <DropdownMenuItem onSelect={editComponent}>Edit</DropdownMenuItem>
-        <DropdownMenuItem>Delete</DropdownMenuItem>
+        <DropdownMenuItem disabled={isMutating} onSelect={editComponent}>
+          Edit
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          disabled={isMutating}
+          onSelect={() => trigger(componentId)}
+        >
+          Delete
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

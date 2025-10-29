@@ -27,6 +27,7 @@ export function ComponentCard({
         <CardDescription>{component.slug}</CardDescription>
         <CardAction>
           <ComponentCardMenu
+            componentId={component.id}
             editComponent={() => {
               setEditComponent(component);
             }}
