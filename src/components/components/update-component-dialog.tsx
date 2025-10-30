@@ -77,7 +77,7 @@ export function UpdateComponentDialog({
       form.reset({
         name: component.name || "",
         slug: component.slug || "",
-        visibility: component.visibility === "private" ? "private" : "public",
+        visibility: component.visibility || "public",
       });
     }
   }, [component, form]);
