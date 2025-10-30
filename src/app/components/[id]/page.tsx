@@ -1,3 +1,4 @@
+import { ComponentEditor } from "@/components/editor/component-editor";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 
@@ -23,5 +24,5 @@ export default async function ComponentPage({
     notFound();
   }
 
-  return <></>;
+  return <ComponentEditor component={component} />;
 }

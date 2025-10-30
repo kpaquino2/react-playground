@@ -18,13 +18,8 @@ const fetcher = async (
   }
   const { data, error } = await supabase
     .from("components")
-    .update({
-      name: args.name,
-      slug: args.slug,
-      description: args.description,
-      visibility: args.visibility,
-    })
-    .eq("id", args.id)
+    .update(args)
+    .eq("id", args.id || "")
     .select()
     .single();
 
