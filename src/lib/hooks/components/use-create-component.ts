@@ -16,19 +16,20 @@ const fetcher = async (
       "AUTH_REQUIRED",
     );
   }
+  const initialCode = `export default function ${
+    args.name?.replaceAll(" ", "")
+  }() {
+  return <div>This is a new component</div>;
+}`;
 
   const { data, error } = await supabase
     .from("components")
     .insert({
-      name: args.name,
-      code: `
-export default function ${args.name?.replaceAll(" ", "")}() {
-  return <div>This is a new component</div>;
-}
-          `,
-      slug: args.slug,
+      name: args.name?.trim() || "",
+      code: initialCode.trim(),
+      slug: args.slug?.trim() || "",
       description: args.description,
-      visibility: args.visibility,
+      visibility: args.visibility || "public",
       created_by: user.id,
     })
     .select()
