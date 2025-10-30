@@ -1,9 +1,4 @@
-import {
-  ArrowLeftIcon,
-  GlobeIcon,
-  LockKeyholeIcon,
-  SaveIcon,
-} from "lucide-react";
+import { ArrowLeftIcon, LockKeyholeIcon, SaveIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import Link from "next/link";
@@ -34,10 +29,8 @@ export function ComponentEditorHeader({
           </Button>
           <Separator orientation="vertical" />
           <p className="ml-2">{name}</p>
-          {visibility === "private" ? (
+          {visibility === "private" && (
             <LockKeyholeIcon className="text-muted-foreground size-4" />
-          ) : (
-            <GlobeIcon className="text-muted-foreground size-4" />
           )}
           {isSaving && <SaveIcon />}
         </div>
