@@ -9,12 +9,13 @@ import {
   useCallback,
 } from "react";
 import { useESBuild } from "@/lib/hooks/use-esbuild";
-import { type Log } from "@/lib/types";
+import type { PreviewSettingsType, Log } from "@/lib/types";
 
 interface PreviewProps {
   name: string;
   code: string;
   addLog: (l: Log) => void;
+  previewSettings: PreviewSettingsType;
 }
 
 export interface PreviewRef {
@@ -22,12 +23,35 @@ export interface PreviewRef {
 }
 
 export const Preview = forwardRef<PreviewRef, PreviewProps>(
-  ({ name, code, addLog }, ref) => {
+  ({ name, code, addLog, previewSettings }, ref) => {
     const iframeRef = useRef<HTMLIFrameElement>(null);
     const { ready, error: buildError, bundle } = useESBuild();
     const [runtimeError, setRuntimeError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const hasRenderedRef = useRef(false);
+
+    function getLayoutStyles(settings: PreviewSettingsType): string {
+      const { layout, padding } = settings;
+      switch (layout) {
+        case "center":
+          return `
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            padding: ${padding}px;
+          `;
+
+        case "top-left":
+          return `
+            display: block;
+            padding: ${padding}px;
+            width: 100%;
+            height: 100%;
+          `;
+      }
+    }
 
     const renderPreview = useCallback(async () => {
       if (!ready) return;
@@ -55,11 +79,11 @@ export const Preview = forwardRef<PreviewRef, PreviewProps>(
                   margin: 0; 
                   padding: 0px; 
                   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                  background: white;
+                  background: ${previewSettings.background};
+                  height: 100svh;
                 }
                 #root {
-                  width: 100%;
-                  height: 100%;
+                  ${getLayoutStyles(previewSettings)}
                 }
               </style>
               
@@ -181,7 +205,7 @@ export const Preview = forwardRef<PreviewRef, PreviewProps>(
       } finally {
         setIsLoading(false);
       }
-    }, [bundle, name, code, ready]);
+    }, [ready, bundle, name, code, previewSettings]);
 
     // Initial render only
     useEffect(() => {

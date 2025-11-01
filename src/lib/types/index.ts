@@ -13,3 +13,9 @@ export type Log = {
   type: string;
   message: string;
 };
+
+export interface PreviewSettingsType {
+  layout: "center" | "top-left";
+  padding: number;
+  background: string;
+}
