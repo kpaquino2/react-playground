@@ -19,7 +19,7 @@ const DEFAULT_CODE = `
         </button>
         <p>{count}</p>
         <button
-          onClick={() => setCount(count + 1)}
+          onClick={() => setCount(count - 1)}
           className="size-8 rounded bg-blue-500 text-white hover:bg-blue-600"
         >
           -
