@@ -17,7 +17,6 @@ import { Console } from "./console";
 import { type ImperativePanelHandle } from "react-resizable-panels";
 import { PreviewSettings } from "./preview-settings";
 
-// TODO change default component
 // TODO vanity link/slugs
 // TODO visibility tests
 // TODO collaborators
