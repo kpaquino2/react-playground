@@ -10,6 +10,7 @@ import {
   TerminalSquareIcon,
 } from "lucide-react";
 import { Button } from "../ui/button";
+import { useEffect, useRef } from "react";
 
 interface ConsoleProps {
   logs: Array<Log>;
@@ -22,6 +23,15 @@ export function Console({
   handleCollapseExpand,
   isCollapsed,
 }: ConsoleProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const c = containerRef.current;
+    if (c) {
+      c.scrollTop = c.scrollHeight;
+    }
+  }, [logs]);
+
   const getLogPrefix = (type: string) => {
     switch (type) {
       case "error":
@@ -57,7 +67,10 @@ export function Console({
         </Button>
       </div>
       {!isCollapsed && (
-        <div className="bg-card text-card-foreground flex flex-1 flex-col overflow-y-scroll font-mono">
+        <div
+          ref={containerRef}
+          className="bg-card text-card-foreground flex flex-1 flex-col overflow-y-scroll font-mono"
+        >
           {logs.map((l, i) => {
             const t = getLogPrefix(l.type);
             return (
