@@ -1,4 +1,3 @@
-// lib/types.ts
 import { type Database } from "./database.types";
 
 export type Component = Database["public"]["Tables"]["components"]["Row"];
@@ -9,3 +8,8 @@ export type ComponentUpdate =
 
 export type Collaborator =
   Database["public"]["Tables"]["component_collaborators"]["Row"];
+
+export type Log = {
+  type: string;
+  message: string;
+};

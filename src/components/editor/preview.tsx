@@ -9,10 +9,12 @@ import {
   useCallback,
 } from "react";
 import { useESBuild } from "@/lib/hooks/use-esbuild";
+import { type Log } from "@/lib/types";
 
 interface PreviewProps {
   name: string;
   code: string;
+  addLog: (l: Log) => void;
 }
 
 export interface PreviewRef {
@@ -20,7 +22,7 @@ export interface PreviewRef {
 }
 
 export const Preview = forwardRef<PreviewRef, PreviewProps>(
-  ({ name, code }, ref) => {
+  ({ name, code, addLog }, ref) => {
     const iframeRef = useRef<HTMLIFrameElement>(null);
     const { ready, error: buildError, bundle } = useESBuild();
     const [runtimeError, setRuntimeError] = useState<string | null>(null);
@@ -69,6 +71,48 @@ export const Preview = forwardRef<PreviewRef, PreviewProps>(
               <div id="root"></div>
               
               <script>
+                // Intercept console methods
+                const originalLog = console.log;
+                const originalWarn = console.warn;
+                const originalError = console.error;
+                const originalInfo = console.info;
+
+                console.log = function(...args) {
+                  originalLog.apply(console, args);
+                  window.parent.postMessage({ 
+                    type: 'console', 
+                    level: 'log',
+                    message: args.map(String).join(' ')
+                  }, '*');
+                };
+
+                console.warn = function(...args) {
+                  originalWarn.apply(console, args);
+                  window.parent.postMessage({ 
+                    type: 'console', 
+                    level: 'warn',
+                    message: args.map(String).join(' ')
+                  }, '*');
+                };
+
+                console.error = function(...args) {
+                  originalError.apply(console, args);
+                  window.parent.postMessage({ 
+                    type: 'console', 
+                    level: 'error',
+                    message: args.map(String).join(' ')
+                  }, '*');
+                };
+
+                console.info = function(...args) {
+                  originalInfo.apply(console, args);
+                  window.parent.postMessage({ 
+                    type: 'console', 
+                    level: 'info',
+                    message: args.map(String).join(' ')
+                  }, '*');
+                };
+
                 // Setup error handling
                 window.addEventListener('error', (e) => {
                   const errorDiv = document.createElement('div');
@@ -155,7 +199,9 @@ export const Preview = forwardRef<PreviewRef, PreviewProps>(
     // Listen for messages from iframe
     useEffect(() => {
       const handleMessage = (event: MessageEvent) => {
-        if (event.data.type === "error") {
+        if (event.data.type === "console") {
+          addLog({ type: event.data.level, message: event.data.message });
+        } else if (event.data.type === "error") {
           setRuntimeError(event.data.message);
         } else if (event.data.type === "success") {
           setRuntimeError(null);
@@ -164,7 +210,7 @@ export const Preview = forwardRef<PreviewRef, PreviewProps>(
 
       window.addEventListener("message", handleMessage);
       return () => window.removeEventListener("message", handleMessage);
-    }, []);
+    }, [addLog]);
 
     if (buildError) {
       return (
