@@ -14,8 +14,8 @@ import { useRef, useState } from "react";
 import { useUpdateComponent } from "@/lib/hooks/components/use-update-component";
 import { useDebouncedCallback } from "use-debounce";
 import { Console } from "./console";
+import { type ImperativePanelHandle } from "react-resizable-panels";
 
-// TODO terminal
 // TODO preview settings
 // TODO vanity link/slugs
 // TODO visibility tests
@@ -34,6 +34,7 @@ export function ComponentEditor({ component }: ComponentEditorProps) {
     onSuccess: (c) => setCode(c.code),
   });
   const [logs, setLogs] = useState<Array<Log>>([]);
+  const [isConsoleCollapsed, setIsConsoleCollapsed] = useState(false);
 
   const handleRun = async () => {
     if (!previewRef.current) return;
@@ -54,6 +55,21 @@ export function ComponentEditor({ component }: ComponentEditorProps) {
     setLogs((prev) => [...prev, l]);
   };
 
+  const consolePanelRef = useRef<ImperativePanelHandle>(null);
+  const handleCollapseExpand = () => {
+    const panel = consolePanelRef.current;
+    if (!panel) return;
+    if (panel.isCollapsed()) {
+      panel.expand();
+    } else {
+      panel.collapse();
+    }
+  };
+
+  const handleCollapse = () => setIsConsoleCollapsed(true);
+
+  const handleExpand = () => setIsConsoleCollapsed(false);
+
   return (
     <main className="flex h-screen flex-col">
       <ComponentEditorHeader
@@ -63,20 +79,38 @@ export function ComponentEditor({ component }: ComponentEditorProps) {
         isSaving={isSaving}
       />
       <ResizablePanelGroup direction="horizontal" className="flex-1">
-        <ResizablePanel>
+        <ResizablePanel defaultSize={50}>
           <Editor code={code} setCode={debouncedSetCode} />
         </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel>
-          <div className="h-1/2">
-            <Preview
-              ref={previewRef}
-              name={component.name}
-              code={code}
-              addLog={handleAddLog}
-            />
-          </div>
-          <Console logs={logs} />
+        <ResizableHandle withHandle />
+        <ResizablePanel defaultSize={50}>
+          <ResizablePanelGroup direction="vertical">
+            <ResizablePanel defaultSize={75}>
+              <Preview
+                ref={previewRef}
+                name={component.name}
+                code={code}
+                addLog={handleAddLog}
+              />
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel
+              ref={consolePanelRef}
+              collapsible
+              defaultSize={25}
+              collapsedSize={3}
+              minSize={10}
+              onCollapse={handleCollapse}
+              onExpand={handleExpand}
+              className="transition"
+            >
+              <Console
+                logs={logs}
+                handleCollapseExpand={handleCollapseExpand}
+                isCollapsed={isConsoleCollapsed}
+              />
+            </ResizablePanel>
+          </ResizablePanelGroup>
         </ResizablePanel>
       </ResizablePanelGroup>
     </main>
