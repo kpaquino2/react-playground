@@ -17,7 +17,6 @@ import { Console } from "./console";
 import { type ImperativePanelHandle } from "react-resizable-panels";
 import { PreviewSettings } from "./preview-settings";
 
-// TODO save preview settings online
 // TODO change default component
 // TODO vanity link/slugs
 // TODO visibility tests
@@ -32,19 +31,19 @@ export function ComponentEditor({ component }: ComponentEditorProps) {
   const previewRef = useRef<PreviewRef>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [code, setCode] = useState(component.code);
-  const { trigger, isMutating: isSaving } = useUpdateComponent({
-    onSuccess: (c) => setCode(c.code),
-  });
+  const { trigger, isMutating: isSaving } = useUpdateComponent();
   const [logs, setLogs] = useState<Array<Log>>([]);
   const [isConsoleCollapsed, setIsConsoleCollapsed] = useState(false);
   const [isPreviewSettingsCollapsed, setIsPreviewSettingsCollapsed] =
     useState(false);
 
-  const [previewSettings, setPreviewSettings] = useState<PreviewSettingsType>({
-    background: "#09090b",
-    layout: "center",
-    padding: 16,
-  });
+  const [previewSettings, setPreviewSettings] = useState<PreviewSettingsType>(
+    component.preview_settings || {
+      background: "#09090b",
+      layout: "center",
+      padding: 16,
+    },
+  );
 
   const handleRun = async () => {
     if (!previewRef.current) return;
@@ -60,6 +59,13 @@ export function ComponentEditor({ component }: ComponentEditorProps) {
   const debouncedSetCode = useDebouncedCallback((c: string) => {
     trigger({ code: c, id: component.id });
   }, 1000);
+
+  const debouncedSetPreviewSettings = useDebouncedCallback(
+    (p: PreviewSettingsType) => {
+      trigger({ preview_settings: p, id: component.id });
+    },
+    1000,
+  );
 
   const handleAddLog = (l: Log) => {
     setLogs((prev) => [...prev, l]);
@@ -114,7 +120,13 @@ export function ComponentEditor({ component }: ComponentEditorProps) {
         <ResizablePanel defaultSize={50} minSize={25}>
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel defaultSize={75} minSize={25}>
-              <Editor code={code} setCode={debouncedSetCode} />
+              <Editor
+                code={code}
+                setCode={(c) => {
+                  setCode(c);
+                  debouncedSetCode(c);
+                }}
+              />
             </ResizablePanel>
             <ResizableHandle withHandle />
             <ResizablePanel
@@ -162,7 +174,10 @@ export function ComponentEditor({ component }: ComponentEditorProps) {
                 handleCollapseExpand={handlePreviewSettingsCollapseExpand}
                 isCollapsed={isPreviewSettingsCollapsed}
                 previewSettings={previewSettings}
-                setPreviewSettings={setPreviewSettings}
+                setPreviewSettings={(p) => {
+                  setPreviewSettings(p);
+                  debouncedSetPreviewSettings(p);
+                }}
               />
             </ResizablePanel>
           </ResizablePanelGroup>
