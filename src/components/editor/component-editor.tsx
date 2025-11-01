@@ -19,7 +19,6 @@ import { PreviewSettings } from "./preview-settings";
 
 // TODO color picker
 // TODO save preview settings online
-// TODO add tailwind
 // TODO change default component
 // TODO vanity link/slugs
 // TODO visibility tests

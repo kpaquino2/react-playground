@@ -87,6 +87,9 @@ export const Preview = forwardRef<PreviewRef, PreviewProps>(
                 }
               </style>
               
+              <!-- Load Tailwind from CDN -->
+              <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
               <!-- Load React from CDN -->
               <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
               <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
