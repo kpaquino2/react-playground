@@ -5,14 +5,27 @@ import {
   Field,
   FieldContent,
   FieldDescription,
-  FieldError,
   FieldGroup,
   FieldLabel,
   FieldTitle,
 } from "../ui/field";
 import { Controller, useForm } from "react-hook-form";
-import { Input } from "../ui/input";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { ColorPickerPopover } from "./color-picker-popover";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "../ui/input-group";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useCallback, useEffect } from "react";
+
+const formSchema = z.object({
+  layout: z.enum(["center", "top-left"]),
+  padding: z.coerce.number<number>().min(0).max(999),
+  background: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/),
+});
 
 interface PreviewSettingsProps {
   handleCollapseExpand: () => void;
@@ -27,13 +40,30 @@ export function PreviewSettings({
   previewSettings,
   setPreviewSettings,
 }: PreviewSettingsProps) {
-  const form = useForm<PreviewSettingsType>({
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: previewSettings,
   });
 
-  const onSubmit = (data: PreviewSettingsType) => {
-    setPreviewSettings(data);
-  };
+  const onSubmit = useCallback(
+    (data: z.infer<typeof formSchema>) => {
+      setPreviewSettings(data);
+    },
+    [setPreviewSettings],
+  );
+
+  useEffect(() => {
+    const callback = form.subscribe({
+      formState: {
+        values: true,
+      },
+      callback: () => {
+        form.handleSubmit(onSubmit)();
+      },
+    });
+
+    return () => callback();
+  }, [form, form.subscribe, onSubmit]);
 
   return (
     <div className="flex h-full flex-col">
@@ -101,18 +131,22 @@ export function PreviewSettings({
                 name="padding"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="padding-field">Padding</FieldLabel>
-                    <Input
-                      {...field}
-                      id="padding-field"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="e.g. dropdown-menu"
-                      autoComplete="off"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
+                  <Field
+                    data-invalid={fieldState.invalid}
+                    orientation="horizontal"
+                  >
+                    <FieldLabel htmlFor="padding-field" className="w-full">
+                      Padding
+                    </FieldLabel>
+                    <InputGroup>
+                      <InputGroupInput
+                        {...field}
+                        id="padding-field"
+                        aria-invalid={fieldState.invalid}
+                        autoComplete="off"
+                      />
+                      <InputGroupAddon align="inline-end">px</InputGroupAddon>
+                    </InputGroup>
                   </Field>
                 )}
               />
@@ -120,35 +154,30 @@ export function PreviewSettings({
                 name="background"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="background-field">
+                  <Field
+                    data-invalid={fieldState.invalid}
+                    orientation="horizontal"
+                  >
+                    <FieldLabel htmlFor="background-field" className="w-full">
                       Background Color
                     </FieldLabel>
-                    <Input
-                      {...field}
-                      id="background-field"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="e.g. dropdown-menu"
-                      autoComplete="off"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
+                    <InputGroup>
+                      <InputGroupInput
+                        {...field}
+                        id="background-field"
+                        aria-invalid={fieldState.invalid}
+                        autoComplete="off"
+                      />
+                      <InputGroupAddon align="inline-end">
+                        <ColorPickerPopover
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </InputGroupAddon>
+                    </InputGroup>
                   </Field>
                 )}
               />
-              <Field orientation="horizontal">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => form.reset()}
-                >
-                  Reset
-                </Button>
-                <Button type="submit" form="form-preview-settings">
-                  Save
-                </Button>
-              </Field>
             </FieldGroup>
           </form>
         </div>

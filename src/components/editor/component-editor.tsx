@@ -17,7 +17,6 @@ import { Console } from "./console";
 import { type ImperativePanelHandle } from "react-resizable-panels";
 import { PreviewSettings } from "./preview-settings";
 
-// TODO color picker
 // TODO save preview settings online
 // TODO change default component
 // TODO vanity link/slugs
