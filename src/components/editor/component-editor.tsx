@@ -79,13 +79,13 @@ export function ComponentEditor({ component }: ComponentEditorProps) {
         isSaving={isSaving}
       />
       <ResizablePanelGroup direction="horizontal" className="flex-1">
-        <ResizablePanel defaultSize={50}>
+        <ResizablePanel defaultSize={50} minSize={25}>
           <Editor code={code} setCode={debouncedSetCode} />
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={50}>
+        <ResizablePanel defaultSize={50} minSize={25}>
           <ResizablePanelGroup direction="vertical">
-            <ResizablePanel defaultSize={75}>
+            <ResizablePanel defaultSize={75} minSize={25}>
               <Preview
                 ref={previewRef}
                 name={component.name}
