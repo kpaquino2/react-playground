@@ -142,15 +142,6 @@ export function Editor({ code, setCode }: EditorProps) {
       // setHasUnsavedChanges(false);
       // console.log("Save triggered (custom handler)");
     });
-    monaco.editor.defineTheme("myCustomTheme", {
-      base: "vs-dark", // or 'vs', 'hc-black'
-      inherit: true,
-      rules: [], // Add custom token rules here if needed
-      colors: {
-        "editor.background": "#09090b", // Your desired background color
-        // Add other editor color customizations here if needed
-      },
-    });
     editor.focus();
   };
 
@@ -163,7 +154,7 @@ export function Editor({ code, setCode }: EditorProps) {
       height="100%"
       defaultLanguage="typescript"
       defaultValue={code}
-      theme="myCustomTheme"
+      theme="vs-dark"
       beforeMount={handleEditorWillMount}
       onMount={handleEditorDidMount}
       onChange={handleChange}
