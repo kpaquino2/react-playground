@@ -12,6 +12,7 @@ let initPromise: Promise<void> | null = null;
 
 // Cache for fetched remote components
 const remoteComponentCache = new Map<string, string>();
+const slugToIdMap = new Map<string, string>();
 
 export function useESBuild() {
   const [ready, setReady] = useState(isInitialized);
@@ -49,12 +50,46 @@ export function useESBuild() {
       });
   }, []);
 
-  // Extract import IDs from code
-  const extractImportIds = useCallback((code: string): string[] => {
-    const importRegex = /import\s+.*?\s+from\s+['"]\/([a-zA-Z0-9]+)['"]/g;
+  // Extract import path from code
+  const extractImportPaths = useCallback((code: string): string[] => {
+    const importRegex = /import\s+.*?\s+from\s+['"]\/(@?[a-zA-Z0-9/-]+)['"]/g;
     const matches = [...code.matchAll(importRegex)];
     return matches.map((m) => m[1]);
   }, []);
+
+  // Extract import IDs from code
+  const extractImportIds = useCallback(
+    async (paths: string[]): Promise<string[]> => {
+      // Recursively resolve slug to id mapping
+      const promisedIds = paths.map(async (path) => {
+        // If no @ or / then path is already ID
+        if (!(path.includes("@") || path.includes("/"))) return path;
+
+        // If slug is in map, get ID from map
+        if (slugToIdMap.has(path)) return slugToIdMap.get(path) as string;
+
+        // Get component from supabase using username and slug
+        const [username, slug] = path.replace("@", "").split("/");
+        const { data: component, error } = await supabase
+          .from("components")
+          .select("id, profiles!components_created_by_fkey(username)")
+          .eq("profiles.username", username)
+          .eq("slug", slug).single();
+
+        if (error) {
+          console.error("Error fetching remote component:", error);
+          throw new Error(`Failed to fetch component: ${error.message}`);
+        }
+
+        // Save the slug to ID mapping of new component
+        slugToIdMap.set(path, component.id);
+        return component.id;
+      });
+      const ids = await Promise.all(promisedIds);
+      return ids;
+    },
+    [supabase],
+  );
 
   // Fetch remote components from database
   const fetchRemoteComponents = useCallback(
@@ -136,7 +171,8 @@ export function useESBuild() {
         );
       }
 
-      const importIds = extractImportIds(code);
+      const importPaths = extractImportPaths(code);
+      const importIds = await extractImportIds(importPaths);
 
       // Check for circular dependencies
       const circularDeps = importIds.filter((id) => visited.has(id));
@@ -168,7 +204,7 @@ export function useESBuild() {
 
       return fileMap;
     },
-    [extractImportIds, fetchRemoteComponents],
+    [extractImportIds, extractImportPaths, fetchRemoteComponents],
   );
 
   const bundle = useCallback(
@@ -186,7 +222,6 @@ export function useESBuild() {
 
         // Resolve all remote dependencies
         const remoteDeps = await resolveDependencies(code);
-        console.log(remoteDeps);
         if (remoteDeps.size > 0) {
           console.log(
             "📥 Resolved dependencies:",
@@ -245,9 +280,15 @@ function createVirtualFileSystemPlugin(
 
         // Handle remote imports (/componentId)
         if (args.path.startsWith("/")) {
+          // Get the ID if path is a slug
+          const cleanPath = args.path.slice(1);
+          const pathId = cleanPath.includes("@") || cleanPath.includes("/")
+            ? slugToIdMap.get(cleanPath) as string
+            : cleanPath;
+
           // Try .tsx first, then .ts
-          const tsxFileName = `${args.path}.tsx`;
-          const tsFileName = `${args.path}.ts`;
+          const tsxFileName = `/${pathId}.tsx`;
+          const tsFileName = `/${pathId}.ts`;
 
           if (files.has(tsxFileName)) {
             return {

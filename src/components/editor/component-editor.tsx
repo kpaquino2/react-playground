@@ -17,7 +17,8 @@ import { Console } from "./console";
 import { type ImperativePanelHandle } from "react-resizable-panels";
 import { PreviewSettings } from "./preview-settings";
 
-// TODO vanity link/slugs
+// TODO error if component imports itself
+// TODO components page pagination
 // TODO visibility tests
 // TODO clean component editor header
 // TODO collaborators
@@ -26,6 +27,7 @@ import { PreviewSettings } from "./preview-settings";
 // TODO 'are you sure' dialog
 // TODO optimizations
 // TODO logo
+// TODO components page header
 // TODO unauth trial
 // TODO landing page
 // TODO redirect after creating component
