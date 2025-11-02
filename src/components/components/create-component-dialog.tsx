@@ -78,14 +78,12 @@ export function CreateComponentDialog({ open, setOpen }: ComponentDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <form id="form-component" onSubmit={form.handleSubmit(onSubmit)}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>New Component</DialogTitle>
-            <DialogDescription>
-              Configure component properties.
-            </DialogDescription>
-          </DialogHeader>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>New Component</DialogTitle>
+          <DialogDescription>Configure component properties.</DialogDescription>
+        </DialogHeader>
+        <form id="form-component" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup className="gap-4">
             <Controller
               name="name"
@@ -144,22 +142,22 @@ export function CreateComponentDialog({ open, setOpen }: ComponentDialogProps) {
               )}
             />
           </FieldGroup>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button type="submit" form="form-component" disabled={isMutating}>
-              {isMutating ? (
-                <>
-                  <Spinner /> Creating...
-                </>
-              ) : (
-                "Create Component"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </form>
+        </form>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <Button type="submit" form="form-component" disabled={isMutating}>
+            {isMutating ? (
+              <>
+                <Spinner /> Creating...
+              </>
+            ) : (
+              "Create Component"
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
     </Dialog>
   );
 }

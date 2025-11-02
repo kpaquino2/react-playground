@@ -17,7 +17,6 @@ import { Console } from "./console";
 import { type ImperativePanelHandle } from "react-resizable-panels";
 import { PreviewSettings } from "./preview-settings";
 
-// TODO components page pagination
 // TODO visibility tests
 // TODO clean component editor header
 // TODO collaborators

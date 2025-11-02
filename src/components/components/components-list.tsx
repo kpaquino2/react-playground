@@ -17,9 +17,17 @@ import { Spinner } from "../ui/spinner";
 import { ComponentCard } from "./component-card";
 import { type Component } from "@/lib/types";
 import { CodeXmlIcon, FrownIcon, PlusIcon } from "lucide-react";
+import { ComponentsPagination } from "./components-pagination";
 
 export function ComponentsList() {
-  const { data, error, isLoading } = useUserComponents();
+  const limit = 24;
+  const [page, setPage] = useState(1);
+  const {
+    data: { components, count } = { components: [], count: 0 },
+    error,
+    isLoading,
+  } = useUserComponents(page, limit);
+
   const [openCreateComponentDailog, setOpenCreateComponentDialog] =
     useState(false);
   const [openUpdateComponentDailog, setOpenUpdateComponentDialog] =
@@ -35,16 +43,16 @@ export function ComponentsList() {
         component={openUpdateComponentDailog}
         setComponent={setOpenUpdateComponentDialog}
       />
-      <div className="my-4 flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <p className="text-xl">Components</p>
-        {data && data.length > 0 && (
+        {count > 0 && (
           <Button size="sm" onClick={() => setOpenCreateComponentDialog(true)}>
             <PlusIcon />
             Create Component
           </Button>
         )}
       </div>
-      <div className="mb-4 flex flex-wrap gap-4">
+      <div className="flex-1">
         {isLoading ? (
           <div className="grid h-96 w-full place-items-center">
             <div className="flex flex-col items-center">
@@ -52,14 +60,16 @@ export function ComponentsList() {
               <p className="font-semibold">Loading...</p>
             </div>
           </div>
-        ) : data && data.length > 0 ? (
-          data.map((c) => (
-            <ComponentCard
-              key={c.id}
-              component={c}
-              setEditComponent={setOpenUpdateComponentDialog}
-            />
-          ))
+        ) : count > 0 ? (
+          <div className="flex flex-wrap gap-4">
+            {components.map((c) => (
+              <ComponentCard
+                key={c.id}
+                component={c}
+                setEditComponent={setOpenUpdateComponentDialog}
+              />
+            ))}
+          </div>
         ) : (
           <Empty>
             <EmptyHeader>
@@ -90,6 +100,12 @@ export function ComponentsList() {
           </Empty>
         )}
       </div>
+      <ComponentsPagination
+        limit={limit}
+        page={page}
+        count={count}
+        setPage={setPage}
+      />
     </>
   );
 }

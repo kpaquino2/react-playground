@@ -93,14 +93,15 @@ export function UpdateComponentDialog({
 
   return (
     <Dialog open={!!component} onOpenChange={onOpenChange}>
-      <form id="update-form-components" onSubmit={form.handleSubmit(onSubmit)}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Edit Component</DialogTitle>
-            <DialogDescription>
-              Configure component properties.
-            </DialogDescription>
-          </DialogHeader>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit Component</DialogTitle>
+          <DialogDescription>Configure component properties.</DialogDescription>
+        </DialogHeader>
+        <form
+          id="update-form-components"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
           <FieldGroup className="gap-4">
             <Controller
               name="name"
@@ -159,26 +160,26 @@ export function UpdateComponentDialog({
               )}
             />
           </FieldGroup>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button
-              type="submit"
-              form="update-form-components"
-              disabled={isMutating}
-            >
-              {isMutating ? (
-                <>
-                  <Spinner /> Saving...
-                </>
-              ) : (
-                "Save Changes"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </form>
+        </form>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <Button
+            type="submit"
+            form="update-form-components"
+            disabled={isMutating}
+          >
+            {isMutating ? (
+              <>
+                <Spinner /> Saving...
+              </>
+            ) : (
+              "Save Changes"
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
     </Dialog>
   );
 }
