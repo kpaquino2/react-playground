@@ -19,8 +19,17 @@ import { PreviewSettings } from "./preview-settings";
 
 // TODO vanity link/slugs
 // TODO visibility tests
+// TODO clean component editor header
 // TODO collaborators
 // TODO share button
+// TODO add kbd shortcuts
+// TODO 'are you sure' dialog
+// TODO optimizations
+// TODO logo
+// TODO unauth trial
+// TODO landing page
+// TODO redirect after creating component
+// TODO prettier
 
 interface ComponentEditorProps {
   component: Component;
