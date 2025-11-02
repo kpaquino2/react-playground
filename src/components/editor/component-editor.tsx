@@ -17,7 +17,6 @@ import { Console } from "./console";
 import { type ImperativePanelHandle } from "react-resizable-panels";
 import { PreviewSettings } from "./preview-settings";
 
-// TODO error if component imports itself
 // TODO components page pagination
 // TODO visibility tests
 // TODO clean component editor header
@@ -163,6 +162,7 @@ export function ComponentEditor({ component }: ComponentEditorProps) {
             <ResizablePanel defaultSize={75} minSize={25}>
               <Preview
                 ref={previewRef}
+                id={component.id}
                 name={component.name}
                 code={code}
                 addLog={handleAddLog}

@@ -12,6 +12,7 @@ import { useESBuild } from "@/lib/hooks/use-esbuild";
 import type { PreviewSettingsType, Log } from "@/lib/types";
 
 interface PreviewProps {
+  id: string;
   name: string;
   code: string;
   addLog: (l: Log) => void;
@@ -23,7 +24,7 @@ export interface PreviewRef {
 }
 
 export const Preview = forwardRef<PreviewRef, PreviewProps>(
-  ({ name, code, addLog, previewSettings }, ref) => {
+  ({ id, name, code, addLog, previewSettings }, ref) => {
     const iframeRef = useRef<HTMLIFrameElement>(null);
     const { ready, error: buildError, bundle } = useESBuild();
     const [runtimeError, setRuntimeError] = useState<string | null>(null);
@@ -61,7 +62,7 @@ export const Preview = forwardRef<PreviewRef, PreviewProps>(
 
       try {
         // Bundle component
-        const bundledCode = await bundle(name, code);
+        const bundledCode = await bundle(id, name, code);
 
         if (!iframeRef.current) return;
 
@@ -208,7 +209,7 @@ export const Preview = forwardRef<PreviewRef, PreviewProps>(
       } finally {
         setIsLoading(false);
       }
-    }, [ready, bundle, name, code, previewSettings]);
+    }, [ready, bundle, id, name, code, previewSettings]);
 
     // Initial render only
     useEffect(() => {

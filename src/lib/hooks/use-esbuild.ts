@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import * as esbuild from "esbuild-wasm";
 import { createClient } from "@/lib/supabase/client";
+import { parse } from "@babel/parser";
+import traverse from "@babel/traverse";
 
 const MAX_DEPTH = 5;
 const MAX_TOTAL_IMPORTS = 50;
@@ -52,9 +54,37 @@ export function useESBuild() {
 
   // Extract import path from code
   const extractImportPaths = useCallback((code: string): string[] => {
-    const importRegex = /import\s+.*?\s+from\s+['"]\/(@?[a-zA-Z0-9/-]+)['"]/g;
-    const matches = [...code.matchAll(importRegex)];
-    return matches.map((m) => m[1]);
+    const importPaths: string[] = [];
+
+    try {
+      // Parse the code into AST
+      const ast = parse(code, {
+        sourceType: "module",
+        plugins: ["jsx", "typescript"],
+      });
+
+      // Traverse AST and find import declarations
+      traverse(ast, {
+        ImportDeclaration(path) {
+          const source = path.node.source.value;
+
+          // Check if it matches patterns: /[id] or /@[username]/[slug]
+          if (typeof source === "string" && source.startsWith("/")) {
+            const match = source.match(/^\/(@?[a-zA-Z0-9/-]+)$/);
+            if (match) {
+              importPaths.push(match[1]);
+            }
+          }
+        },
+      });
+    } catch (error) {
+      console.error("Failed to parse code:", error);
+      const importRegex =
+        /^import\s+.*?\s+from\s+['"]\/(@?[a-zA-Z0-9/-]+)['"]/gm;
+      const matches = [...code.matchAll(importRegex)];
+      return matches.map((m) => m[1]);
+    }
+    return importPaths;
   }, []);
 
   // Extract import IDs from code
@@ -175,10 +205,18 @@ export function useESBuild() {
       const importIds = await extractImportIds(importPaths);
 
       // Check for circular dependencies
-      const circularDeps = importIds.filter((id) => visited.has(id));
+      const circularDeps = importPaths.map((p) =>
+        slugToIdMap.has(p)
+          ? { id: slugToIdMap.get(p) as string, slug: p }
+          : { id: p, slug: "" }
+      ).filter((p) => visited.has(p.id));
       if (circularDeps.length > 0) {
         throw new Error(
-          `Circular dependency detected: ${circularDeps.join(", ")}`,
+          `Circular dependency detected: ${
+            circularDeps.map((p) => p.slug ? `${p.id} (${p.slug})` : p.id).join(
+              ", ",
+            )
+          }`,
         );
       }
 
@@ -208,7 +246,7 @@ export function useESBuild() {
   );
 
   const bundle = useCallback(
-    async (name: string, code: string): Promise<string> => {
+    async (id: string, name: string, code: string): Promise<string> => {
       if (!ready) {
         throw new Error("esbuild not initialized yet");
       }
@@ -221,7 +259,10 @@ export function useESBuild() {
         console.log(`📦 Bundling component: ${name}`);
 
         // Resolve all remote dependencies
-        const remoteDeps = await resolveDependencies(code);
+        const remoteDeps = await resolveDependencies(
+          code,
+          new Set<string>([id]),
+        );
         if (remoteDeps.size > 0) {
           console.log(
             "📥 Resolved dependencies:",
