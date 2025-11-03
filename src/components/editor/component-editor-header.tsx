@@ -63,7 +63,7 @@ export function ComponentEditorHeader({
                   <SquarePenIcon className="" />
                 </Button>
               )}
-              {!isSaving && (
+              {isSaving && (
                 <SaveIcon className="text-muted-foreground size-4" />
               )}
             </div>
