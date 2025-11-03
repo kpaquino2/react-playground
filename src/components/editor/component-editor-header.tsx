@@ -2,10 +2,10 @@ import { ArrowLeftIcon, LockKeyholeIcon, SaveIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import Link from "next/link";
+import { SharePopover } from "./share-popover";
+import type { Component } from "@/lib/types";
 
 interface ComponentEditorHeaderProps {
-  name: string;
-  visibility: "public" | "private" | null;
   run: () => void;
   isRunning: boolean;
   isSaving: boolean;
@@ -13,13 +13,15 @@ interface ComponentEditorHeaderProps {
 }
 
 export function ComponentEditorHeader({
+  id,
   name,
+  slug,
   visibility,
   run,
   isRunning,
   isSaving,
   readOnly,
-}: ComponentEditorHeaderProps) {
+}: ComponentEditorHeaderProps & Component) {
   return (
     <header>
       <div className="h-12 border-b">
@@ -35,10 +37,16 @@ export function ComponentEditorHeader({
             {visibility === "private" && (
               <LockKeyholeIcon className="text-muted-foreground size-4" />
             )}
-            {readOnly && <p>Read Only</p>}
             {isSaving && <SaveIcon />}
           </div>
-          <div className="flex h-full items-center">
+          <div className="flex h-full items-center gap-2">
+            <SharePopover
+              id={id}
+              name={name}
+              slug={slug}
+              visibility={visibility || "public"}
+              disabled={readOnly}
+            />
             <Button size="sm" onClick={run} disabled={isRunning}>
               Run
             </Button>

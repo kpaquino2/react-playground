@@ -18,13 +18,14 @@ import { type ImperativePanelHandle } from "react-resizable-panels";
 import { PreviewSettings } from "./preview-settings";
 import { useAuth } from "@/lib/context/auth-context";
 
-// TODO clean component editor header
-// TODO share button
+// TODO edit component from its page
 // TODO add kbd shortcuts
 // TODO 'are you sure' dialog
 // TODO optimizations
 // TODO logo
+// TODO update user header
 // TODO components page header
+// TODO clean component editor header
 // TODO unauth trial
 // TODO landing page
 // TODO redirect after creating component
