@@ -1,5 +1,11 @@
 import { Button } from "@/components/ui/button";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Nutshell | 404",
+  description: "...",
+};
 
 export default function NotFound() {
   return (

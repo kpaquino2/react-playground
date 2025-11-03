@@ -1,5 +1,11 @@
 import { ComponentsList } from "@/components/components/components-list";
 import { ComponentsPageHeader } from "@/components/components/components-page-header";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Nutshell | My Components",
+  description: "...",
+};
 
 export default function ComponentsPage() {
   return (

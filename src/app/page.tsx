@@ -2,7 +2,14 @@ import { AuthStateButton } from "@/components/auth/auth-state-button";
 import { StartButton } from "@/components/auth/start-button";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/logo";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Nutshell",
+  description:
+    "A component-centric React playground. Create, share, and import React components with zero setup. Tailwind CSS and full React support included.",
+};
 
 export default async function Home() {
   return (

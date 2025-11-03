@@ -1,4 +1,10 @@
 import { AuthButton } from "@/components/auth/auth-button";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Nutshell | Sign in",
+  description: "...",
+};
 
 export default function SignInPage() {
   return (

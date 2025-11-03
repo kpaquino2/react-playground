@@ -2,15 +2,13 @@ import { ComponentEditor } from "@/components/editor/component-editor";
 import { createClient } from "@/lib/supabase/server";
 import type { Component } from "@/lib/types";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
-export default async function ComponentPage({
-  params,
-}: {
+interface ComponentPageProps {
   params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+}
 
-  // Trial component
+async function fetchComponent(id: string) {
   if (id === "trial-component") {
     const component: Component = {
       id: "trial-component",
@@ -74,21 +72,41 @@ export default function TrialComponent() {
       visibility: "public",
       views: 0,
     };
-
-    return <ComponentEditor initComponent={component} />;
+    return component;
   }
 
   const supabase = await createClient();
-
-  const { data: component, error } = await supabase
+  const { data, error } = await supabase
     .from("components")
     .select("*")
     .eq("id", id)
     .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data;
+}
 
-  if (error) {
-    throw new Error(error.message);
+export async function generateMetadata({
+  params,
+}: ComponentPageProps): Promise<Metadata> {
+  const { id } = await params;
+  if (id === "trial-component") {
+    return {
+      title: "Nutshell | Trial Component",
+      description: "...",
+    };
   }
+
+  const component = await fetchComponent(id);
+  return {
+    title: "Nutshell | " + (component?.name || "404"),
+    description: "...",
+  };
+}
+
+export default async function ComponentPage({ params }: ComponentPageProps) {
+  const { id } = await params;
+
+  const component = await fetchComponent(id);
 
   if (!component) {
     notFound();
