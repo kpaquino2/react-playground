@@ -27,7 +27,7 @@ import { UpdateComponentDialog } from "../components/update-component-dialog";
 // TODO default component selection
 // TODO make a copy of component
 // TODO tutorial
-// TODO update trial component
+// TODO metadata
 
 interface ComponentEditorProps {
   initComponent: Component;

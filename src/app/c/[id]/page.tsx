@@ -14,39 +14,50 @@ export default async function ComponentPage({
   if (id === "trial-component") {
     const component: Component = {
       id: "trial-component",
-      code: `export default function TrialComponent() {
+      code: `// You can import components from Nutshell using their slug or id
+
+import Button from "/@kpaquino2/button"; // slug
+// import Button from "/c941e570";  // id
+
+// Click "Run" or press "Ctrl + S" to see your changes live!
+
+export default function TrialComponent() {
+  // React hooks and utilities are available via the React global
+  // Use React.useState, React.useEffect, React.useMemo, etc.
   const [count, setCount] = React.useState(0);
 
+  // Console methods work! console.log, console.error, console.warn, console.info all display in the console panel below
+  console.info('It works!')
+
   return (
+    // Tailwind CSS works out of the box
     <div className="flex w-72 flex-col gap-4 rounded border-2 border-blue-400 bg-blue-100 p-3 text-blue-800 shadow-lg/50">
       <h1 className="text-xl font-bold">My Component</h1>
       <div className="flex items-center justify-between">
-        <button
+        <Button
           onClick={() => setCount(count + 1)}
-          className="size-8 rounded bg-blue-500 text-white hover:bg-blue-600"
         >
           +
-        </button>
+        </Button>
         <p>{count}</p>
-        <button
+        <Button
           onClick={() => setCount(count - 1)}
-          className="size-8 rounded bg-blue-500 text-white hover:bg-blue-600"
         >
           -
-        </button>
+        </Button>
       </div>
-      <button
+      <Button
         onClick={() => console.log(count)}
-        className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
       >
         Print Count
-      </button>
+      </Button>
       <p className="text-gray-600">
         Edit this component and click "Run" to see changes.
       </p>
     </div>
   );
-}`,
+}
+`,
       created_at: new Date().toISOString(),
       created_by: "",
       description: null,
