@@ -9,6 +9,8 @@ import { Separator } from "../ui/separator";
 import Link from "next/link";
 import { SharePopover } from "./share-popover";
 import type { Component } from "@/lib/types";
+import { Kbd } from "../ui/kbd";
+import { isMac } from "@/lib/utils";
 
 interface ComponentEditorHeaderProps {
   run: () => void;
@@ -64,8 +66,15 @@ export function ComponentEditorHeader({
                 visibility={component.visibility || "public"}
                 disabled={readOnly}
               />
-              <Button size="sm" onClick={run} disabled={isRunning}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={run}
+                disabled={isRunning}
+              >
                 Run
+                <Kbd>{isMac() ? "⌘" : "Ctrl"}</Kbd>
+                <Kbd>S</Kbd>
               </Button>
             </div>
           </div>

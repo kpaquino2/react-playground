@@ -6,9 +6,10 @@ interface EditorProps {
   code: string;
   setCode: (v: string) => void;
   readOnly: boolean;
+  handleRun: () => void;
 }
 
-export function Editor({ code, setCode, readOnly }: EditorProps) {
+export function Editor({ code, setCode, readOnly, handleRun }: EditorProps) {
   const handleEditorWillMount = (monaco: Monaco) => {
     // Determine which defaults to configure based on language
     const languageDefaults = monaco.languages.typescript.typescriptDefaults;
@@ -139,9 +140,7 @@ export function Editor({ code, setCode, readOnly }: EditorProps) {
     monaco: Monaco,
   ) => {
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
-      // update(componentRef.current.id, editor.getValue());
-      // setHasUnsavedChanges(false);
-      // console.log("Save triggered (custom handler)");
+      handleRun();
     });
     editor.focus();
   };

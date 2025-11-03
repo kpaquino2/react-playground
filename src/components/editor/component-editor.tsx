@@ -19,7 +19,6 @@ import { PreviewSettings } from "./preview-settings";
 import { useAuth } from "@/lib/context/auth-context";
 import { UpdateComponentDialog } from "../components/update-component-dialog";
 
-// TODO add kbd shortcuts
 // TODO 'are you sure' dialog
 // TODO optimizations
 // TODO logo
@@ -139,6 +138,7 @@ export function ComponentEditor({ initComponent }: ComponentEditorProps) {
                   if (!readOnly) debouncedSetCode(c);
                 }}
                 readOnly={readOnly}
+                handleRun={handleRun}
               />
             </ResizablePanel>
             <ResizableHandle withHandle />
