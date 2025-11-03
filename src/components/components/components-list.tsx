@@ -1,0 +1,111 @@
+"use client";
+
+import { useUserComponents } from "@/lib/hooks/components/use-user-components";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "../ui/empty";
+import { Button } from "../ui/button";
+import { CreateComponentDialog } from "./create-component-dialog";
+import { UpdateComponentDialog } from "./update-component-dialog";
+import { useState } from "react";
+import { Spinner } from "../ui/spinner";
+import { ComponentCard } from "./component-card";
+import { type Component } from "@/lib/types";
+import { CodeXmlIcon, FrownIcon, PlusIcon } from "lucide-react";
+import { ComponentsPagination } from "./components-pagination";
+
+export function ComponentsList() {
+  const limit = 24;
+  const [page, setPage] = useState(1);
+  const {
+    data: { components, count } = { components: [], count: 0 },
+    error,
+    isLoading,
+  } = useUserComponents(page, limit);
+
+  const [openCreateComponentDailog, setOpenCreateComponentDialog] =
+    useState(false);
+  const [openUpdateComponentDailog, setOpenUpdateComponentDialog] =
+    useState<Component>();
+
+  return (
+    <>
+      <CreateComponentDialog
+        open={openCreateComponentDailog}
+        setOpen={setOpenCreateComponentDialog}
+      />
+      <UpdateComponentDialog
+        component={openUpdateComponentDailog}
+        setComponent={setOpenUpdateComponentDialog}
+      />
+      <div className="flex items-center justify-between">
+        <p className="text-xl">Components</p>
+        {count > 0 && (
+          <Button size="sm" onClick={() => setOpenCreateComponentDialog(true)}>
+            <PlusIcon />
+            Create Component
+          </Button>
+        )}
+      </div>
+      <div className="flex-1">
+        {isLoading ? (
+          <div className="grid h-96 w-full place-items-center">
+            <div className="flex flex-col items-center">
+              <Spinner className="size-9" />
+              <p className="font-semibold">Loading...</p>
+            </div>
+          </div>
+        ) : count > 0 ? (
+          <div className="flex flex-wrap gap-4">
+            {components.map((c) => (
+              <ComponentCard
+                key={c.id}
+                component={c}
+                setEditComponent={setOpenUpdateComponentDialog}
+              />
+            ))}
+          </div>
+        ) : (
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                {error ? <FrownIcon /> : <CodeXmlIcon />}
+              </EmptyMedia>
+              <EmptyTitle>
+                {error ? error.userMessage : "No Components Yet"}
+              </EmptyTitle>
+              <EmptyDescription>
+                {error
+                  ? error.code
+                    ? `Error code: ${error.code}`
+                    : "Unkown error"
+                  : "You haven&apos;t created any components yet. Get started by creating your first component."}
+              </EmptyDescription>
+            </EmptyHeader>
+            {!error && (
+              <EmptyContent>
+                <div className="flex gap-2">
+                  <Button onClick={() => setOpenCreateComponentDialog(true)}>
+                    <PlusIcon />
+                    Create Component
+                  </Button>
+                </div>
+              </EmptyContent>
+            )}
+          </Empty>
+        )}
+      </div>
+      <ComponentsPagination
+        limit={limit}
+        page={page}
+        count={count}
+        setPage={setPage}
+      />
+    </>
+  );
+}
