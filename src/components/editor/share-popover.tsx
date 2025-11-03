@@ -6,7 +6,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useCopyToClipboard } from "@/lib/hooks/use-copy-to-clipboard";
-import { CheckIcon, ChevronDownIcon, CopyIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon, CopyIcon, Share2Icon } from "lucide-react";
 import {
   InputGroup,
   InputGroupAddon,
@@ -37,7 +37,7 @@ export function SharePopover({
   const [copiedText, copy] = useCopyToClipboard();
   const [useSlug, setUseSlug] = useState(true);
   const importText =
-    `import ${name} from "/` +
+    `import ${name.replaceAll(" ", "")} from "/` +
     (useSlug ? `@${user?.user_metadata.user_name}/${slug}";` : `${id}";`);
   const linkText =
     getURL() +
@@ -46,29 +46,38 @@ export function SharePopover({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" disabled={disabled}>
-          Share
-          <ChevronDownIcon />
+        <Button
+          variant="outline"
+          disabled={disabled}
+          className="h-7 w-7 sm:h-8 sm:w-auto sm:px-3"
+        >
+          <Share2Icon />
+          <p className="hidden sm:flex">Share</p>
+          <ChevronDownIcon className="hidden sm:flex" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-100" align="end">
-        <div className="grid gap-4">
+      <PopoverContent
+        className="w-72 sm:w-100"
+        align="end"
+        collisionPadding={16}
+      >
+        <div className="grid gap-2 sm:gap-4">
           <div className="space-y-2">
-            <h4 className="leading-none font-medium">
+            <h4 className="text-sm leading-none font-medium sm:text-base">
               {visibility.charAt(0).toUpperCase() + visibility.slice(1)}
             </h4>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-xs sm:text-sm">
               {visibility === "public"
                 ? "Anyone can view and import this component."
                 : "Only you can view, edit, or import this component"}
             </p>
           </div>
-          <div className="grid gap-4">
-            <div className="grid items-center gap-2">
-              <Label>Import</Label>
+          <div className="grid gap-2 sm:gap-4">
+            <div className="grid items-center gap-1.5 sm:gap-2">
+              <Label className="text-xs sm:text-sm">Import</Label>
               <InputGroup>
                 <InputGroupInput
-                  className="font-mono"
+                  className="font-mono text-sm"
                   value={importText}
                   readOnly
                 />
@@ -87,9 +96,13 @@ export function SharePopover({
               </InputGroup>
             </div>
             <div className="grid items-center gap-2">
-              <Label>Link</Label>
+              <Label className="text-xs sm:text-sm">Link</Label>
               <InputGroup>
-                <InputGroupInput value={linkText} readOnly />
+                <InputGroupInput
+                  className="text-sm"
+                  value={linkText}
+                  readOnly
+                />
                 <InputGroupAddon align="inline-end">
                   <InputGroupButton
                     aria-label="Copy"
@@ -105,7 +118,9 @@ export function SharePopover({
               </InputGroup>
             </div>
             <div className="flex items-center justify-between">
-              <Label htmlFor="use-slug">Use slug instead of ID</Label>
+              <Label htmlFor="use-slug" className="text-xs sm:text-sm">
+                Use slug instead of ID
+              </Label>
               <Checkbox
                 id="use-slug"
                 checked={useSlug}

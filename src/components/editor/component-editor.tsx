@@ -18,6 +18,16 @@ import { type ImperativePanelHandle } from "react-resizable-panels";
 import { PreviewSettings } from "./preview-settings";
 import { useAuth } from "@/lib/context/auth-context";
 import { UpdateComponentDialog } from "../components/update-component-dialog";
+import { useWindowSize } from "@/lib/hooks/use-window-size";
+import {
+  ChevronsDownIcon,
+  ChevronsUpIcon,
+  CodeXmlIcon,
+  FullscreenIcon,
+  SettingsIcon,
+  TerminalSquareIcon,
+} from "lucide-react";
+import { Button } from "../ui/button";
 
 // TODO 'are you sure' dialog
 // TODO optimizations
@@ -46,7 +56,7 @@ export function ComponentEditor({ initComponent }: ComponentEditorProps) {
     useState(false);
   const [openUpdateComponentDailog, setOpenUpdateComponentDialog] =
     useState<Component>();
-
+  const { width } = useWindowSize();
   const handleRun = async () => {
     if (!previewRef.current) return;
     setLogs([]);
@@ -111,7 +121,7 @@ export function ComponentEditor({ initComponent }: ComponentEditorProps) {
   }, [component.preview_settings]);
 
   return (
-    <main className="flex h-screen flex-col">
+    <div className="flex h-screen flex-col overflow-hidden">
       <UpdateComponentDialog
         component={openUpdateComponentDailog}
         setComponent={setOpenUpdateComponentDialog}
@@ -126,9 +136,16 @@ export function ComponentEditor({ initComponent }: ComponentEditorProps) {
         trialMode={trialMode}
         setOpenUpdateComponentDialog={setOpenUpdateComponentDialog}
       />
-      <ResizablePanelGroup direction="horizontal" className="flex-1">
+      <ResizablePanelGroup
+        direction={width > 900 ? "horizontal" : "vertical"}
+        className="flex-1"
+      >
         <ResizablePanel defaultSize={50} minSize={25}>
           <ResizablePanelGroup direction="vertical">
+            <div className="bg-background z-5 flex h-8 items-center gap-2 border-b px-2">
+              <CodeXmlIcon className="size-5" />
+              <p className="flex-1">Code</p>
+            </div>
             <ResizablePanel defaultSize={75} minSize={25}>
               <Editor
                 code={component.code}
@@ -141,27 +158,36 @@ export function ComponentEditor({ initComponent }: ComponentEditorProps) {
               />
             </ResizablePanel>
             <ResizableHandle withHandle />
+            <div className="bg-background z-5 flex h-8 items-center gap-2 border-b px-2">
+              <TerminalSquareIcon className="size-5" />
+              <p className="flex-1">Console</p>
+              <Button
+                size="icon-sm"
+                variant="ghost"
+                onClick={handleConsoleCollapseExpand}
+              >
+                {isConsoleCollapsed ? <ChevronsUpIcon /> : <ChevronsDownIcon />}
+              </Button>
+            </div>
             <ResizablePanel
               ref={consolePanelRef}
               collapsible
               defaultSize={25}
-              collapsedSize={3}
               minSize={10}
               onCollapse={handleConsoleCollapse}
               onExpand={handleConsoleExpand}
-              className="transition"
             >
-              <Console
-                logs={logs}
-                handleCollapseExpand={handleConsoleCollapseExpand}
-                isCollapsed={isConsoleCollapsed}
-              />
+              <Console logs={logs} isCollapsed={isConsoleCollapsed} />
             </ResizablePanel>
           </ResizablePanelGroup>
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={50} minSize={25}>
           <ResizablePanelGroup direction="vertical">
+            <div className="bg-background z-5 flex h-8 items-center gap-2 border-b px-2">
+              <FullscreenIcon className="size-5" />
+              <p className="flex-1">Preview</p>
+            </div>
             <ResizablePanel defaultSize={75} minSize={25}>
               <Preview
                 ref={previewRef}
@@ -173,29 +199,41 @@ export function ComponentEditor({ initComponent }: ComponentEditorProps) {
               />
             </ResizablePanel>
             <ResizableHandle withHandle />
+            <div className="bg-background z-5 flex h-8 items-center gap-2 border-b px-2">
+              <SettingsIcon className="size-5" />
+              <p className="flex-1">Preview Settings</p>
+              <Button
+                size="icon-sm"
+                variant="ghost"
+                onClick={handlePreviewSettingsCollapseExpand}
+              >
+                {isPreviewSettingsCollapsed ? (
+                  <ChevronsUpIcon />
+                ) : (
+                  <ChevronsDownIcon />
+                )}
+              </Button>
+            </div>
             <ResizablePanel
               ref={previewSettingsPanelRef}
               collapsible
               defaultSize={25}
-              collapsedSize={3}
               minSize={10}
               onCollapse={handlePreviewSettingsCollapse}
               onExpand={handlePreviewSettingsExpand}
-              className="transition"
             >
               <PreviewSettings
-                handleCollapseExpand={handlePreviewSettingsCollapseExpand}
-                isCollapsed={isPreviewSettingsCollapsed}
                 previewSettings={component.preview_settings}
                 setPreviewSettings={(p) => {
                   setComponent((prev) => ({ ...prev, preview_settings: p }));
                   if (!trialMode && !readOnly) debouncedSetPreviewSettings(p);
                 }}
+                isCollapsed={isPreviewSettingsCollapsed}
               />
             </ResizablePanel>
           </ResizablePanelGroup>
         </ResizablePanel>
       </ResizablePanelGroup>
-    </main>
+    </div>
   );
 }
