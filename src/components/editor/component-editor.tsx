@@ -21,12 +21,10 @@ import { UpdateComponentDialog } from "../components/update-component-dialog";
 
 // TODO 'are you sure' dialog
 // TODO optimizations
-// TODO logo
 // TODO update user header
 // TODO components page header
 // TODO clean component editor header
 // TODO unauth trial
-// TODO landing page
 // TODO redirect after creating component
 // TODO prettier
 // TODO collaborators
