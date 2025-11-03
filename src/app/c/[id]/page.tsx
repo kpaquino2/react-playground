@@ -24,5 +24,5 @@ export default async function ComponentPage({
     notFound();
   }
 
-  return <ComponentEditor component={component} />;
+  return <ComponentEditor initComponent={component} />;
 }

@@ -49,16 +49,19 @@ const formSchema = z.object({
 interface ComponentDialogProps {
   component?: Component;
   setComponent: (c?: Component) => void;
+  updateParentComponent?: (c: Component) => void;
 }
 
 export function UpdateComponentDialog({
   component,
   setComponent,
+  updateParentComponent,
 }: ComponentDialogProps) {
   const { isMutating, trigger } = useUpdateComponent({
     onError: (e) => toast.error(e.userMessage),
-    onSuccess: () => {
+    onSuccess: (c) => {
       toast.success("Successfully updated a component!");
+      updateParentComponent?.(c);
       onOpenChange();
     },
   });

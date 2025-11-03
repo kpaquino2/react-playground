@@ -17,8 +17,8 @@ import { Console } from "./console";
 import { type ImperativePanelHandle } from "react-resizable-panels";
 import { PreviewSettings } from "./preview-settings";
 import { useAuth } from "@/lib/context/auth-context";
+import { UpdateComponentDialog } from "../components/update-component-dialog";
 
-// TODO edit component from its page
 // TODO add kbd shortcuts
 // TODO 'are you sure' dialog
 // TODO optimizations
@@ -33,28 +33,22 @@ import { useAuth } from "@/lib/context/auth-context";
 // TODO collaborators
 
 interface ComponentEditorProps {
-  component: Component;
+  initComponent: Component;
 }
 
-export function ComponentEditor({ component }: ComponentEditorProps) {
+export function ComponentEditor({ initComponent }: ComponentEditorProps) {
   const { user } = useAuth();
-  const readOnly = component.created_by !== user?.id;
+  const [component, setComponent] = useState(initComponent);
+  const readOnly = initComponent.created_by !== user?.id;
   const previewRef = useRef<PreviewRef>(null);
   const [isRunning, setIsRunning] = useState(false);
-  const [code, setCode] = useState(component.code);
   const { trigger, isMutating: isSaving } = useUpdateComponent();
   const [logs, setLogs] = useState<Array<Log>>([]);
   const [isConsoleCollapsed, setIsConsoleCollapsed] = useState(false);
   const [isPreviewSettingsCollapsed, setIsPreviewSettingsCollapsed] =
     useState(false);
-
-  const [previewSettings, setPreviewSettings] = useState<PreviewSettingsType>(
-    component.preview_settings || {
-      background: "#09090b",
-      layout: "center",
-      padding: 16,
-    },
-  );
+  const [openUpdateComponentDailog, setOpenUpdateComponentDialog] =
+    useState<Component>();
 
   const handleRun = async () => {
     if (!previewRef.current) return;
@@ -68,12 +62,12 @@ export function ComponentEditor({ component }: ComponentEditorProps) {
   };
 
   const debouncedSetCode = useDebouncedCallback((c: string) => {
-    trigger({ code: c, id: component.id });
+    trigger({ code: c, id: initComponent.id });
   }, 1000);
 
   const debouncedSetPreviewSettings = useDebouncedCallback(
     (p: PreviewSettingsType) => {
-      trigger({ preview_settings: p, id: component.id });
+      trigger({ preview_settings: p, id: initComponent.id });
     },
     1000,
   );
@@ -117,26 +111,32 @@ export function ComponentEditor({ component }: ComponentEditorProps) {
 
   useEffect(() => {
     handleRun();
-  }, [previewSettings]);
+  }, [component.preview_settings]);
 
   return (
     <main className="flex h-screen flex-col">
+      <UpdateComponentDialog
+        component={openUpdateComponentDailog}
+        setComponent={setOpenUpdateComponentDialog}
+        updateParentComponent={setComponent}
+      />
       <ComponentEditorHeader
         {...component}
         run={handleRun}
         isRunning={isRunning}
         isSaving={isSaving}
         readOnly={readOnly}
+        setOpenUpdateComponentDialog={setOpenUpdateComponentDialog}
       />
       <ResizablePanelGroup direction="horizontal" className="flex-1">
         <ResizablePanel defaultSize={50} minSize={25}>
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel defaultSize={75} minSize={25}>
               <Editor
-                code={code}
+                code={component.code}
                 setCode={(c) => {
-                  setCode(c);
-                  if (readOnly) debouncedSetCode(c);
+                  setComponent((prev) => ({ ...prev, code: c }));
+                  if (!readOnly) debouncedSetCode(c);
                 }}
                 readOnly={readOnly}
               />
@@ -166,11 +166,11 @@ export function ComponentEditor({ component }: ComponentEditorProps) {
             <ResizablePanel defaultSize={75} minSize={25}>
               <Preview
                 ref={previewRef}
-                id={component.id}
+                id={initComponent.id}
                 name={component.name}
-                code={code}
+                code={component.code}
                 addLog={handleAddLog}
-                previewSettings={previewSettings}
+                previewSettings={component.preview_settings}
               />
             </ResizablePanel>
             <ResizableHandle withHandle />
@@ -187,10 +187,10 @@ export function ComponentEditor({ component }: ComponentEditorProps) {
               <PreviewSettings
                 handleCollapseExpand={handlePreviewSettingsCollapseExpand}
                 isCollapsed={isPreviewSettingsCollapsed}
-                previewSettings={previewSettings}
+                previewSettings={component.preview_settings}
                 setPreviewSettings={(p) => {
-                  setPreviewSettings(p);
-                  if (readOnly) debouncedSetPreviewSettings(p);
+                  setComponent((prev) => ({ ...prev, preview_settings: p }));
+                  if (!readOnly) debouncedSetPreviewSettings(p);
                 }}
               />
             </ResizablePanel>
