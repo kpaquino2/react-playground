@@ -6,10 +6,10 @@ import { Button } from "../ui/button";
 import { UserMenu } from "./user-menu";
 import { Spinner } from "../ui/spinner";
 
-export function AuthStateButton() {
+export function AuthStateButton({ onSignOut }: { onSignOut?: () => void }) {
   const { user, loading } = useAuth();
   return user ? (
-    <UserMenu />
+    <UserMenu onSignOut={onSignOut} />
   ) : (
     <Button asChild={!!user} variant="ghost">
       {loading ? <Spinner /> : <Link href="/signin">Sign in</Link>}

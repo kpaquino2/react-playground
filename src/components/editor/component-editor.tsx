@@ -19,7 +19,6 @@ import { PreviewSettings } from "./preview-settings";
 import { useAuth } from "@/lib/context/auth-context";
 import { UpdateComponentDialog } from "../components/update-component-dialog";
 
-// TODO reload stuff when auth changes
 // TODO 'are you sure' dialog
 // TODO optimizations
 // TODO clean component editor header

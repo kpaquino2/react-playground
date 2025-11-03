@@ -12,6 +12,7 @@ import type { Component } from "@/lib/types";
 import { Kbd } from "../ui/kbd";
 import { isMac } from "@/lib/utils";
 import { AuthStateButton } from "../auth/auth-state-button";
+import { useRouter } from "next/navigation";
 
 interface ComponentEditorHeaderProps {
   run: () => void;
@@ -30,6 +31,7 @@ export function ComponentEditorHeader({
   ...rest
 }: ComponentEditorHeaderProps & Component) {
   const component = rest;
+  const router = useRouter();
 
   return (
     <>
@@ -77,7 +79,11 @@ export function ComponentEditorHeader({
                 <Kbd>{isMac() ? "⌘" : "Ctrl"}</Kbd>
                 <Kbd>S</Kbd>
               </Button>
-              <AuthStateButton />
+              <AuthStateButton
+                onSignOut={() => {
+                  if (component.visibility === "private") router.push("/");
+                }}
+              />
             </div>
           </div>
         </div>

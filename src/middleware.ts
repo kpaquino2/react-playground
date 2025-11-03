@@ -32,7 +32,10 @@ export async function middleware(request: NextRequest) {
   // Refresh session if expired
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (user && request.nextUrl.pathname === "/signin") {
+  if (
+    (user && request.nextUrl.pathname === "/signin") ||
+    (!user && request.nextUrl.pathname === "/components")
+  ) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/";
     return NextResponse.redirect(redirectUrl);

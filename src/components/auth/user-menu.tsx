@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { LogOutIcon } from "lucide-react";
 
-export function UserMenu() {
+export function UserMenu({ onSignOut }: { onSignOut?: () => void }) {
   const { user, signOut } = useAuth();
 
   return (
@@ -33,7 +33,13 @@ export function UserMenu() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={signOut} className="justify-between">
+        <DropdownMenuItem
+          onSelect={async () => {
+            await signOut();
+            onSignOut?.();
+          }}
+          className="justify-between"
+        >
           Sign out
           <LogOutIcon />
         </DropdownMenuItem>
