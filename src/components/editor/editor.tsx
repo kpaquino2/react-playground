@@ -5,9 +5,10 @@ import { type editor } from "monaco-editor";
 interface EditorProps {
   code: string;
   setCode: (v: string) => void;
+  readOnly: boolean;
 }
 
-export function Editor({ code, setCode }: EditorProps) {
+export function Editor({ code, setCode, readOnly }: EditorProps) {
   const handleEditorWillMount = (monaco: Monaco) => {
     // Determine which defaults to configure based on language
     const languageDefaults = monaco.languages.typescript.typescriptDefaults;
@@ -159,6 +160,7 @@ export function Editor({ code, setCode }: EditorProps) {
       onMount={handleEditorDidMount}
       onChange={handleChange}
       options={{
+        readOnly: readOnly,
         minimap: { enabled: false },
         fontSize: 14,
         lineNumbers: "on",

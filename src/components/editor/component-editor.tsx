@@ -16,10 +16,9 @@ import { useDebouncedCallback } from "use-debounce";
 import { Console } from "./console";
 import { type ImperativePanelHandle } from "react-resizable-panels";
 import { PreviewSettings } from "./preview-settings";
+import { useAuth } from "@/lib/context/auth-context";
 
-// TODO visibility tests
 // TODO clean component editor header
-// TODO collaborators
 // TODO share button
 // TODO add kbd shortcuts
 // TODO 'are you sure' dialog
@@ -30,12 +29,15 @@ import { PreviewSettings } from "./preview-settings";
 // TODO landing page
 // TODO redirect after creating component
 // TODO prettier
+// TODO collaborators
 
 interface ComponentEditorProps {
   component: Component;
 }
 
 export function ComponentEditor({ component }: ComponentEditorProps) {
+  const { user } = useAuth();
+  const readOnly = component.created_by !== user?.id;
   const previewRef = useRef<PreviewRef>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [code, setCode] = useState(component.code);
@@ -123,6 +125,7 @@ export function ComponentEditor({ component }: ComponentEditorProps) {
         run={handleRun}
         isRunning={isRunning}
         isSaving={isSaving}
+        readOnly={readOnly}
       />
       <ResizablePanelGroup direction="horizontal" className="flex-1">
         <ResizablePanel defaultSize={50} minSize={25}>
@@ -132,8 +135,9 @@ export function ComponentEditor({ component }: ComponentEditorProps) {
                 code={code}
                 setCode={(c) => {
                   setCode(c);
-                  debouncedSetCode(c);
+                  if (readOnly) debouncedSetCode(c);
                 }}
+                readOnly={readOnly}
               />
             </ResizablePanel>
             <ResizableHandle withHandle />
@@ -185,7 +189,7 @@ export function ComponentEditor({ component }: ComponentEditorProps) {
                 previewSettings={previewSettings}
                 setPreviewSettings={(p) => {
                   setPreviewSettings(p);
-                  debouncedSetPreviewSettings(p);
+                  if (readOnly) debouncedSetPreviewSettings(p);
                 }}
               />
             </ResizablePanel>
