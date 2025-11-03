@@ -21,10 +21,10 @@ import { UpdateComponentDialog } from "../components/update-component-dialog";
 
 // TODO 'are you sure' dialog
 // TODO optimizations
-// TODO clean component editor header
 // TODO redirect after creating component
 // TODO prettier
 // TODO collaborators
+// TODO dependencies
 
 interface ComponentEditorProps {
   initComponent: Component;

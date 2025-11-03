@@ -11,7 +11,7 @@ export function AuthStateButton({ onSignOut }: { onSignOut?: () => void }) {
   return user ? (
     <UserMenu onSignOut={onSignOut} />
   ) : (
-    <Button asChild={!!user} variant="ghost">
+    <Button asChild={!!user} variant="secondary">
       {loading ? <Spinner /> : <Link href="/signin">Sign in</Link>}
     </Button>
   );

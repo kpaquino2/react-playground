@@ -61,7 +61,9 @@ export function ComponentEditorHeader({
                   <SquarePenIcon className="" />
                 </Button>
               )}
-              {isSaving && <SaveIcon />}
+              {!isSaving && (
+                <SaveIcon className="text-muted-foreground size-4" />
+              )}
             </div>
             <div className="flex h-full items-center gap-2">
               <SharePopover
