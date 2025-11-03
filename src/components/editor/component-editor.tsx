@@ -22,8 +22,12 @@ import { UpdateComponentDialog } from "../components/update-component-dialog";
 // TODO 'are you sure' dialog
 // TODO optimizations
 // TODO prettier
-// TODO collaborators
-// TODO dependencies
+// TODO collaboration
+// TODO list of dependencies
+// TODO default component selection
+// TODO make a copy of component
+// TODO tutorial
+// TODO update trial component
 
 interface ComponentEditorProps {
   initComponent: Component;
