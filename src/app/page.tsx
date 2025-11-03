@@ -26,12 +26,12 @@ export default async function Home() {
         </nav>
       </header>
       <main className="flex flex-1 flex-col items-center justify-center px-4 py-20 text-center">
-        <h1 className="mb-6 text-4xl leading-tight font-extrabold text-white sm:text-5xl md:text-6xl">
+        <h1 className="mb-6 text-4xl leading-tight font-extrabold sm:text-5xl md:text-6xl">
           Build & Test React Components.
           <br className="" />
           All in a <span className="text-teal-400">Nutshell</span>.
         </h1>
-        <p className="mx-auto mb-10 max-w-2xl text-lg text-gray-400 md:text-xl">
+        <p className="text-muted-foreground mx-auto mb-10 max-w-2xl text-lg md:text-xl">
           A lightweight in-browser sandbox for creating and testing React
           components. No setup, no build process. Just code.
         </p>
@@ -45,11 +45,11 @@ export default async function Home() {
         </div>
       </main>
       <footer className="py-8 text-center">
-        <p className="text-sm text-gray-500">
+        <p className="text-muted-foreground text-sm">
           Built by{" "}
           <Link
             href="https://github.com/kpaquino2"
-            className="text-gray-400 underline hover:text-indigo-400"
+            className="text-gray-400 underline hover:text-teal-400"
           >
             Kyle Aquino
           </Link>
