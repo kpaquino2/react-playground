@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Spinner } from "../ui/spinner";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z
@@ -50,11 +51,12 @@ interface ComponentDialogProps {
 }
 
 export function CreateComponentDialog({ open, setOpen }: ComponentDialogProps) {
+  const router = useRouter();
   const { isMutating, trigger } = useCreateComponent({
     onError: (e) => toast.error(e.userMessage),
-    onSuccess: () => {
+    onSuccess: (c) => {
       toast.success("Successfully created a component!");
-      onOpenChange(false);
+      router.push(`/c/${c.id}`);
     },
   });
 
