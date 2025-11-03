@@ -16,6 +16,7 @@ import {
 import { useState } from "react";
 import { useAuth } from "@/lib/context/auth-context";
 import { Checkbox } from "../ui/checkbox";
+import { getURL } from "@/lib/utils";
 
 interface SharePopoverProps {
   visibility: "public" | "private";
@@ -39,9 +40,7 @@ export function SharePopover({
     `import ${name} from "/` +
     (useSlug ? `@${user?.user_metadata.user_name}/${slug}";` : `${id}";`);
   const linkText =
-    (process.env.NODE_ENV === "development"
-      ? "localhost:3000/"
-      : "react.kpaquino2.dev/") +
+    getURL() +
     (useSlug ? `@${user?.user_metadata.user_name}/${slug}` : `c/${id}`);
 
   return (
