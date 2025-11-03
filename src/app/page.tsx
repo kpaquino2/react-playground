@@ -1,14 +1,10 @@
 import { AuthStateButton } from "@/components/auth/auth-state-button";
+import { StartButton } from "@/components/auth/start-button";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/logo";
-import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 
 export default async function Home() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
   return (
     <div className="flex h-screen flex-col">
       <header className="px-4 py-5 sm:px-8 md:px-12">
@@ -33,14 +29,7 @@ export default async function Home() {
           components. No setup, no build process. Just code.
         </p>
         <div className="flex gap-4">
-          <Button asChild size="xl">
-            <Link
-              href={user ? "/components" : "/c/trial-component"}
-              className="text-xl font-semibold"
-            >
-              {user ? "Start Building Now" : "Try It Out"}
-            </Link>
-          </Button>
+          <StartButton />
           <Button asChild variant="outline" size="xl">
             <Link href="/" className="text-xl font-semibold">
               View on GitHub

@@ -13,6 +13,7 @@ import { Kbd } from "../ui/kbd";
 import { isMac } from "@/lib/utils";
 import { AuthStateButton } from "../auth/auth-state-button";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/context/auth-context";
 
 interface ComponentEditorHeaderProps {
   run: () => void;
@@ -33,6 +34,7 @@ export function ComponentEditorHeader({
   ...rest
 }: ComponentEditorHeaderProps & Component) {
   const component = rest;
+  const { user } = useAuth();
   const router = useRouter();
 
   return (
@@ -99,8 +101,15 @@ export function ComponentEditorHeader({
         )}
         {trialMode && (
           <div className="bg-secondary text-secondary-foreground flex justify-center border-b">
-            You&apos;re in trial mode. Sign in to start creating your own
-            components.
+            This component is for trial only.
+            <Link
+              href={user ? "/components" : "/signin"}
+              className="pl-1 underline"
+            >
+              {user
+                ? "Click here to start creating your own components"
+                : "Sign in to start creating your own components."}
+            </Link>
           </div>
         )}
       </header>
