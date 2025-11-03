@@ -14,7 +14,6 @@ export default function Home() {
               <p className="text-2xl font-bold">Nutshell</p>
             </Link>
           </Button>
-
           <AuthStateButton />
         </nav>
       </header>

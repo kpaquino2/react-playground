@@ -11,6 +11,7 @@ import { SharePopover } from "./share-popover";
 import type { Component } from "@/lib/types";
 import { Kbd } from "../ui/kbd";
 import { isMac } from "@/lib/utils";
+import { AuthStateButton } from "../auth/auth-state-button";
 
 interface ComponentEditorHeaderProps {
   run: () => void;
@@ -76,6 +77,7 @@ export function ComponentEditorHeader({
                 <Kbd>{isMac() ? "⌘" : "Ctrl"}</Kbd>
                 <Kbd>S</Kbd>
               </Button>
+              <AuthStateButton />
             </div>
           </div>
         </div>

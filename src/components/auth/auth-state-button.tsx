@@ -3,16 +3,16 @@
 import { useAuth } from "@/lib/context/auth-context";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { UserMenu } from "./user-menu";
+import { Spinner } from "../ui/spinner";
 
 export function AuthStateButton() {
-  const { user, signOut } = useAuth();
+  const { user, loading } = useAuth();
   return user ? (
-    <Button size="sm" onClick={signOut}>
-      Sign out
-    </Button>
+    <UserMenu />
   ) : (
-    <Button asChild size="sm">
-      <Link href="/signin">Sign in</Link>
+    <Button asChild={!!user} variant="ghost">
+      {loading ? <Spinner /> : <Link href="/signin">Sign in</Link>}
     </Button>
   );
 }
