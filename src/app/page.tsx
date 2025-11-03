@@ -1,9 +1,14 @@
 import { AuthStateButton } from "@/components/auth/auth-state-button";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/logo";
+import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   return (
     <div className="flex h-screen flex-col">
       <header className="px-4 py-5 sm:px-8 md:px-12">
@@ -29,8 +34,11 @@ export default function Home() {
         </p>
         <div className="flex gap-4">
           <Button asChild size="xl">
-            <Link href="/components" className="text-xl font-semibold">
-              Start Building Now
+            <Link
+              href={user ? "/components" : "/c/trial-component"}
+              className="text-xl font-semibold"
+            >
+              {user ? "Start Building Now" : "Try It Out"}
             </Link>
           </Button>
           <Button asChild variant="outline" size="xl">

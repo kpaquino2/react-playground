@@ -22,7 +22,6 @@ import { UpdateComponentDialog } from "../components/update-component-dialog";
 // TODO 'are you sure' dialog
 // TODO optimizations
 // TODO clean component editor header
-// TODO unauth trial
 // TODO redirect after creating component
 // TODO prettier
 // TODO collaborators
@@ -34,7 +33,8 @@ interface ComponentEditorProps {
 export function ComponentEditor({ initComponent }: ComponentEditorProps) {
   const { user } = useAuth();
   const [component, setComponent] = useState(initComponent);
-  const readOnly = initComponent.created_by !== user?.id;
+  const trialMode = initComponent.id === "trial-component";
+  const readOnly = !trialMode && initComponent.created_by !== user?.id;
   const previewRef = useRef<PreviewRef>(null);
   const [isRunning, setIsRunning] = useState(false);
   const { trigger, isMutating: isSaving } = useUpdateComponent();
@@ -121,6 +121,7 @@ export function ComponentEditor({ initComponent }: ComponentEditorProps) {
         isRunning={isRunning}
         isSaving={isSaving}
         readOnly={readOnly}
+        trialMode={trialMode}
         setOpenUpdateComponentDialog={setOpenUpdateComponentDialog}
       />
       <ResizablePanelGroup direction="horizontal" className="flex-1">
@@ -131,7 +132,7 @@ export function ComponentEditor({ initComponent }: ComponentEditorProps) {
                 code={component.code}
                 setCode={(c) => {
                   setComponent((prev) => ({ ...prev, code: c }));
-                  if (!readOnly) debouncedSetCode(c);
+                  if (!trialMode && !readOnly) debouncedSetCode(c);
                 }}
                 readOnly={readOnly}
                 handleRun={handleRun}
@@ -186,7 +187,7 @@ export function ComponentEditor({ initComponent }: ComponentEditorProps) {
                 previewSettings={component.preview_settings}
                 setPreviewSettings={(p) => {
                   setComponent((prev) => ({ ...prev, preview_settings: p }));
-                  if (!readOnly) debouncedSetPreviewSettings(p);
+                  if (!trialMode && !readOnly) debouncedSetPreviewSettings(p);
                 }}
               />
             </ResizablePanel>

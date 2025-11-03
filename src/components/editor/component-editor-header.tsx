@@ -19,6 +19,7 @@ interface ComponentEditorHeaderProps {
   isRunning: boolean;
   isSaving: boolean;
   readOnly: boolean;
+  trialMode: boolean;
   setOpenUpdateComponentDialog: (c: Component) => void;
 }
 
@@ -27,6 +28,7 @@ export function ComponentEditorHeader({
   isRunning,
   isSaving,
   readOnly,
+  trialMode,
   setOpenUpdateComponentDialog,
   ...rest
 }: ComponentEditorHeaderProps & Component) {
@@ -50,7 +52,7 @@ export function ComponentEditorHeader({
               {component.visibility === "private" && (
                 <LockKeyholeIcon className="text-muted-foreground size-4" />
               )}
-              {!readOnly && (
+              {!trialMode && !readOnly && (
                 <Button
                   size="icon-sm"
                   variant="ghost"
@@ -67,7 +69,7 @@ export function ComponentEditorHeader({
                 name={component.name}
                 slug={component.slug}
                 visibility={component.visibility || "public"}
-                disabled={readOnly}
+                disabled={readOnly || trialMode}
               />
               <Button
                 size="sm"
@@ -91,6 +93,12 @@ export function ComponentEditorHeader({
           <div className="bg-secondary text-secondary-foreground flex justify-center border-b">
             This component is in read-only mode. You do not have access to make
             changes to the code.
+          </div>
+        )}
+        {trialMode && (
+          <div className="bg-secondary text-secondary-foreground flex justify-center border-b">
+            You&apos;re in trial mode. Sign in to start creating your own
+            components.
           </div>
         )}
       </header>
