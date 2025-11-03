@@ -9,6 +9,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { LogOutIcon } from "lucide-react";
+import Link from "next/link";
 
 export function UserMenu({ onSignOut }: { onSignOut?: () => void }) {
   const { user, signOut } = useAuth();
@@ -33,6 +34,9 @@ export function UserMenu({ onSignOut }: { onSignOut?: () => void }) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href="/components">My Components</Link>
+        </DropdownMenuItem>
         <DropdownMenuItem
           onSelect={async () => {
             await signOut();
