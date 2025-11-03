@@ -2,27 +2,18 @@ import { type Log } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import {
   ChevronRightIcon,
-  ChevronsDownIcon,
-  ChevronsUpIcon,
   CircleAlert,
   CircleXIcon,
   InfoIcon,
-  TerminalSquareIcon,
 } from "lucide-react";
-import { Button } from "../ui/button";
 import { useEffect, useRef } from "react";
 
 interface ConsoleProps {
   logs: Array<Log>;
-  handleCollapseExpand: () => void;
   isCollapsed: boolean;
 }
 
-export function Console({
-  logs,
-  handleCollapseExpand,
-  isCollapsed,
-}: ConsoleProps) {
+export function Console({ logs, isCollapsed }: ConsoleProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,18 +49,11 @@ export function Console({
   };
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="bg-background z-5 flex h-8 items-center gap-2 border-b px-2">
-        <TerminalSquareIcon className="size-5" />
-        <p className="flex-1">Console</p>
-        <Button size="icon-sm" variant="ghost" onClick={handleCollapseExpand}>
-          {isCollapsed ? <ChevronsUpIcon /> : <ChevronsDownIcon />}
-        </Button>
-      </div>
+    <>
       {!isCollapsed && (
         <div
           ref={containerRef}
-          className="bg-card text-card-foreground flex flex-1 flex-col overflow-y-scroll font-mono"
+          className="bg-card text-card-foreground flex h-full flex-col overflow-y-scroll font-mono"
         >
           {logs.map((l, i) => {
             const t = getLogPrefix(l.type);
@@ -88,6 +72,6 @@ export function Console({
           })}
         </div>
       )}
-    </div>
+    </>
   );
 }
