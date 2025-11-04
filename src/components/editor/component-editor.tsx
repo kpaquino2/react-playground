@@ -29,12 +29,12 @@ import {
 } from "lucide-react";
 import { Button } from "../ui/button";
 
+// TODO readme.md
 // TODO 'are you sure' dialog
 // TODO optimizations
 // TODO prettier
 // TODO collaboration
 // TODO list of dependencies
-// TODO default component selection
 // TODO make a copy of component
 // TODO tutorial
 
