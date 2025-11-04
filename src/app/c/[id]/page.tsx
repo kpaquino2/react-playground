@@ -15,7 +15,7 @@ async function fetchComponent(id: string) {
       code: `// You can import components from Nutshell using their slug or id
 
 import Button from "/@kpaquino2/button"; // slug
-// import Button from "/c941e570";  // id
+// import Button from "/5afc0702";  // id
 
 // Click "Run" or press "Ctrl + S" to see your changes live!
 
