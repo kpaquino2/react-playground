@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/auth-context";
 
 interface ComponentEditorHeaderProps {
-  run: () => void;
+  run: (c: string) => void;
   isRunning: boolean;
   isSaving: boolean;
   readOnly: boolean;
@@ -79,7 +79,7 @@ export function ComponentEditorHeader({
             />
             <Button
               variant="outline"
-              onClick={run}
+              onClick={() => run(component.code)}
               disabled={isRunning}
               className="h-7 w-7 sm:h-8 sm:w-auto sm:px-3"
             >

@@ -6,7 +6,7 @@ interface EditorProps {
   code: string;
   setCode: (v: string) => void;
   readOnly: boolean;
-  handleRun: () => void;
+  handleRun: (c: string) => void;
 }
 
 export function Editor({ code, setCode, readOnly, handleRun }: EditorProps) {
@@ -140,7 +140,7 @@ export function Editor({ code, setCode, readOnly, handleRun }: EditorProps) {
     monaco: Monaco,
   ) => {
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
-      handleRun();
+      handleRun(editor.getValue());
     });
     editor.focus();
   };
@@ -153,7 +153,7 @@ export function Editor({ code, setCode, readOnly, handleRun }: EditorProps) {
     <MonacoEditor
       height="100%"
       defaultLanguage="typescript"
-      defaultValue={code}
+      value={code}
       theme="vs-dark"
       beforeMount={handleEditorWillMount}
       onMount={handleEditorDidMount}
