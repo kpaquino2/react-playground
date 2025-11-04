@@ -32,13 +32,16 @@ export default async function Home() {
           All in a <span className="text-teal-400">Nutshell</span>.
         </h1>
         <p className="text-muted-foreground mx-auto mb-10 max-w-2xl text-lg md:text-xl">
-          A lightweight in-browser sandbox for creating and testing React
-          components. No setup, no build process. Just code.
+          A component-centric React playground for building, sharing, and
+          remixing components instantly. No setup, no build process. Just code.
         </p>
         <div className="flex gap-4">
           <StartButton />
           <Button asChild variant="outline" size="xl">
-            <Link href="/" className="text-xl font-semibold">
+            <Link
+              href="https://github.com/kpaquino2/react-playground"
+              className="text-xl font-semibold"
+            >
               View on GitHub
             </Link>
           </Button>
