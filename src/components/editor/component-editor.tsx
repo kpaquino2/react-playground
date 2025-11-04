@@ -39,9 +39,6 @@ import prettierPluginEstree from "prettier/plugins/estree";
 // TODO list of dependencies
 // TODO make a copy of component
 // TODO tutorial
-// TODO component form
-// TODO component name strict
-// TODO improve preview
 
 interface ComponentEditorProps {
   initComponent: Component;
