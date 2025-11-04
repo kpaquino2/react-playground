@@ -10,7 +10,7 @@ import {
   ResizableHandle,
 } from "../ui/resizable";
 import { Preview, type PreviewRef } from "./preview";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useUpdateComponent } from "@/lib/hooks/components/use-update-component";
 import { useDebouncedCallback } from "use-debounce";
 import { Console } from "./console";
@@ -28,15 +28,20 @@ import {
   TerminalSquareIcon,
 } from "lucide-react";
 import { Button } from "../ui/button";
+import prettier from "prettier/standalone";
+import parserTypeScript from "prettier/parser-typescript";
+import prettierPluginEstree from "prettier/plugins/estree";
 
 // TODO readme.md
 // TODO 'are you sure' dialog
 // TODO optimizations
-// TODO prettier
 // TODO collaboration
 // TODO list of dependencies
 // TODO make a copy of component
 // TODO tutorial
+// TODO component form
+// TODO component name strict
+// TODO improve preview
 
 interface ComponentEditorProps {
   initComponent: Component;
@@ -57,11 +62,17 @@ export function ComponentEditor({ initComponent }: ComponentEditorProps) {
   const [openUpdateComponentDailog, setOpenUpdateComponentDialog] =
     useState<Component>();
   const { width } = useWindowSize();
-  const handleRun = async () => {
+
+  const handleRun = async (editorCode: string) => {
     if (!previewRef.current) return;
     setLogs([]);
     setIsRunning(true);
     try {
+      const c = await prettier.format(editorCode, {
+        parser: "typescript",
+        plugins: [parserTypeScript, prettierPluginEstree],
+      });
+      setComponent((prev) => ({ ...prev, code: c }));
       await previewRef.current.refresh();
     } finally {
       setIsRunning(false);
@@ -116,9 +127,16 @@ export function ComponentEditor({ initComponent }: ComponentEditorProps) {
   const handlePreviewSettingsExpand = () =>
     setIsPreviewSettingsCollapsed(false);
 
-  useEffect(() => {
-    handleRun();
-  }, [component.preview_settings]);
+  const handleSetCode = (c: string) => {
+    setComponent((prev) => ({ ...prev, code: c }));
+    if (!trialMode && !readOnly) debouncedSetCode(c);
+  };
+
+  const handleSetPreviewSettings = (p: PreviewSettingsType) => {
+    setComponent((prev) => ({ ...prev, preview_settings: p }));
+    if (!trialMode && !readOnly) debouncedSetPreviewSettings(p);
+    handleRun(component.code);
+  };
 
   return (
     <div className="flex h-screen flex-col overflow-hidden">
@@ -149,10 +167,7 @@ export function ComponentEditor({ initComponent }: ComponentEditorProps) {
             <ResizablePanel defaultSize={75} minSize={25}>
               <Editor
                 code={component.code}
-                setCode={(c) => {
-                  setComponent((prev) => ({ ...prev, code: c }));
-                  if (!trialMode && !readOnly) debouncedSetCode(c);
-                }}
+                setCode={handleSetCode}
                 readOnly={readOnly}
                 handleRun={handleRun}
               />
@@ -224,10 +239,7 @@ export function ComponentEditor({ initComponent }: ComponentEditorProps) {
             >
               <PreviewSettings
                 previewSettings={component.preview_settings}
-                setPreviewSettings={(p) => {
-                  setComponent((prev) => ({ ...prev, preview_settings: p }));
-                  if (!trialMode && !readOnly) debouncedSetPreviewSettings(p);
-                }}
+                setPreviewSettings={handleSetPreviewSettings}
                 isCollapsed={isPreviewSettingsCollapsed}
               />
             </ResizablePanel>
