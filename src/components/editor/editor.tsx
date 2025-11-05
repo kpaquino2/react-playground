@@ -153,6 +153,7 @@ export function Editor({ code, setCode, readOnly, handleRun }: EditorProps) {
     <MonacoEditor
       height="100%"
       defaultLanguage="typescript"
+      path="Component.tsx"
       value={code}
       theme="vs-dark"
       beforeMount={handleEditorWillMount}
