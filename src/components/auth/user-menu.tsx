@@ -13,20 +13,26 @@ import Link from "next/link";
 
 export function UserMenu({ onSignOut }: { onSignOut?: () => void }) {
   const { user, signOut } = useAuth();
-
+  console.log(user?.user_metadata);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage src={user?.user_metadata.avatar_url} alt="@shadcn" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage
+            src={user?.user_metadata.avatar_url}
+            alt={user?.user_metadata.user_name}
+          />
+          <AvatarFallback>{user?.email?.[0].toUpperCase()}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
         <DropdownMenuLabel className="flex items-center gap-3">
           <Avatar>
-            <AvatarImage src={user?.user_metadata.avatar_url} alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage
+              src={user?.user_metadata.avatar_url}
+              alt={user?.user_metadata.user_name}
+            />
+            <AvatarFallback>{user?.email?.[0].toUpperCase()}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
             <p className="">{user?.user_metadata.user_name}</p>
