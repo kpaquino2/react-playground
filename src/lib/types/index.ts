@@ -1,18 +1,12 @@
 import { type Database } from "./database.types";
 
 export type Component = Database["public"]["Tables"]["components"]["Row"];
-export type ComponentInsert =
-  Database["public"]["Tables"]["components"]["Insert"];
-export type ComponentUpdate =
-  Database["public"]["Tables"]["components"]["Update"];
+export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
-export type Collaborator =
-  Database["public"]["Tables"]["component_collaborators"]["Row"];
-
-export type Log = {
+export interface Log {
   type: string;
   message: string;
-};
+}
 
 export interface PreviewSettingsType {
   layout: "center" | "top-left";
