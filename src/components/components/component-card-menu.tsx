@@ -8,6 +8,7 @@ import {
 } from "../ui/dropdown-menu";
 import { useDeleteComponent } from "@/lib/hooks/components/use-delete-component";
 import { toast } from "sonner";
+import { useConfirm } from "@/lib/context/confirm-context";
 
 interface ComponentCardMenuProps {
   componentId: string;
@@ -22,6 +23,19 @@ export function ComponentCardMenu({
     onError: (e) => toast.error(e.userMessage),
     onSuccess: () => toast.success("Successfully deleted a component!"),
   });
+
+  const { confirm } = useConfirm();
+
+  const handleDelete = async () => {
+    const confirmed = await confirm({
+      title: "Delete Component?",
+      message: "This action cannot be undone.",
+      confirmText: "Delete",
+    });
+
+    if (!confirmed) return;
+    await trigger(componentId);
+  };
 
   return (
     <DropdownMenu>
@@ -41,7 +55,7 @@ export function ComponentCardMenu({
         <DropdownMenuItem
           disabled={isMutating}
           onClick={(e) => e.stopPropagation()}
-          onSelect={() => trigger(componentId)}
+          onSelect={handleDelete}
         >
           Delete
         </DropdownMenuItem>
