@@ -16,6 +16,7 @@ import { Spinner } from "../ui/spinner";
 import { useRouter } from "next/navigation";
 import { ComponentForm, componentFormSchema } from "./component-form";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 interface ComponentDialogProps {
   open: boolean;
@@ -23,9 +24,13 @@ interface ComponentDialogProps {
 }
 
 export function CreateComponentDialog({ open, setOpen }: ComponentDialogProps) {
+  const [submitted, setSubmitted] = useState(false);
   const router = useRouter();
   const { isMutating, trigger } = useCreateComponent({
-    onError: (e) => toast.error(e.userMessage),
+    onError: (e) => {
+      setSubmitted(false);
+      toast.error(e.userMessage);
+    },
     onSuccess: (c) => {
       toast.success("Successfully created a component!");
       router.push(`/c/${c.id}`);
@@ -42,6 +47,7 @@ export function CreateComponentDialog({ open, setOpen }: ComponentDialogProps) {
   });
 
   function onSubmit(data: z.infer<typeof componentFormSchema>) {
+    setSubmitted(true);
     trigger(data);
   }
 
@@ -62,7 +68,11 @@ export function CreateComponentDialog({ open, setOpen }: ComponentDialogProps) {
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button type="submit" form="form-component" disabled={isMutating}>
+          <Button
+            type="submit"
+            form="form-component"
+            disabled={isMutating || submitted}
+          >
             {isMutating ? (
               <>
                 <Spinner /> Creating...
