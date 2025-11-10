@@ -32,7 +32,6 @@ import prettier from "prettier/standalone";
 import parserTypeScript from "prettier/parser-typescript";
 import prettierPluginEstree from "prettier/plugins/estree";
 
-// TODO 'are you sure' dialog
 // TODO optimizations
 // TODO collaboration
 // TODO list of dependencies

@@ -17,6 +17,7 @@ import { type Component } from "@/lib/types";
 import { useEffect } from "react";
 import { useUpdateComponent } from "@/lib/hooks/components/use-update-component";
 import { ComponentForm, componentFormSchema } from "./component-form";
+import { useConfirm } from "@/lib/context/confirm-context";
 
 interface ComponentDialogProps {
   component?: Component;
@@ -57,8 +58,23 @@ export function UpdateComponentDialog({
     }
   }, [component, form]);
 
-  function onSubmit(data: z.infer<typeof componentFormSchema>) {
-    trigger({ id: component?.id, ...data });
+  const { confirm } = useConfirm();
+
+  async function onSubmit(data: z.infer<typeof componentFormSchema>) {
+    const changes: string[] = [];
+    if (data.slug !== component?.slug) changes.push("Slug");
+    if (data.visibility !== component?.visibility) changes.push("Visibility");
+    const confirmed =
+      changes.length > 0
+        ? await confirm({
+            title: `Update Component ${changes.join(" and ")}?`,
+            message:
+              "Changes might break components that import this component.",
+            confirmText: "Update",
+          })
+        : true;
+    if (!confirmed) return;
+    await trigger({ id: component?.id, ...data });
   }
 
   function onOpenChange() {
