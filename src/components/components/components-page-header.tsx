@@ -13,7 +13,7 @@ export function ComponentsPageHeader() {
       <div className="mx-auto flex h-full max-w-[332px] items-center justify-between px-4 md:max-w-[648px] lg:max-w-[964px] xl:max-w-[1280px]">
         <Button variant="ghost" size="icon-lg" asChild className="group">
           <Link href="/">
-            <Logo className="size-6" />
+            <Logo className="size-7" />
           </Link>
         </Button>
         <AuthStateButton onSignOut={() => router.push("/")} />

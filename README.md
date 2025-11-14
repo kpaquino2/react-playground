@@ -1,5 +1,12 @@
-<h1>
-  <img src="public/logo.svg" width="28" height="28">
+<style type="text/css">
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 8px
+  }
+</style>
+<h1 class="header">
+  <img src="public/logo.svg" width="32" height="32">
   Nutshell
 </h1>
 
