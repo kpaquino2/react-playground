@@ -18,7 +18,7 @@ export default async function Home() {
         <nav className="mx-auto flex max-w-6xl items-center justify-between">
           <Button variant="ghost" size="xl" asChild className="group">
             <Link href="/">
-              <Logo className="size-6" />
+              <Logo className="size-7" />
               <p className="text-2xl font-bold">Nutshell</p>
             </Link>
           </Button>
