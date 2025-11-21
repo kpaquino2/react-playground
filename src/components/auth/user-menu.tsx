@@ -13,7 +13,7 @@ import Link from "next/link";
 
 export function UserMenu({ onSignOut }: { onSignOut?: () => void }) {
   const { user, signOut } = useAuth();
-  console.log(user?.user_metadata);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
